@@ -23,3 +23,8 @@ body{
     gap: 90px;
 
 }
+li{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
