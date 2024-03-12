@@ -1,5 +1,5 @@
 import React, {  useState,useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import axios from "axios";
 
@@ -13,6 +13,29 @@ function Myaccount() {
   const [image, setimage] = useState()
   axios.defaults.withCredentials = true;
   const [file, setfile] = useState();
+  const [updated, setupdated] = useState(false)
+  const navigate = useNavigate();
+ 
+  const [values, setValues] = useState({
+    gender:'',
+    phno: '' ,
+    address:''
+});
+console.log(values)
+const handleUpdate = () => {
+  axios.post('http://localhost:3000/update-account', values)
+      .then(res => {
+        if (res.data.Status === 'Success') {
+          navigate('/dash');
+          console.log("Updated account gender phno and address")
+          setupdated(true)
+      } else {
+          setupdated(false)
+      }
+      })
+      .catch(err => console.error(err))
+}
+
 
   const handleFile = (e) => {
     setfile(e.target.files[0]);
@@ -29,6 +52,9 @@ function Myaccount() {
         console.log(err);
       });
   };
+
+ 
+
   useEffect(() => {
     axios
       .get("http://localhost:3000")
@@ -37,7 +63,8 @@ function Myaccount() {
           setauth(true);
           // navigate('/login');
           setname(res.data.userData.fullname);
-          console.log(res);
+          console.log(res.data);
+         
           setemail(res.data.userData.email);
           setimage(res.data.userData.image);
           setphone(res.data.userData.phno);
@@ -51,16 +78,6 @@ function Myaccount() {
 
     });
 
-
-    useEffect(()=>{
-      axios.get('http://localhost:3000/see')
-      .then((response) => {
-         console.log(response);
-      }).catch((err) => console.log(err));
-  },[]);
-
-
-  console.log(phone);
   const handleLogout = () => {
     axios
       .get("http://localhost:3000/logout")
@@ -77,23 +94,24 @@ function Myaccount() {
     document.querySelector('.uploadimage input[type="file"]').click();
   }
   
-
   return (
     <div className="dashboard bg-zinc-200 w-full min-h-screen px-10 py-5 flex gap-5">
       <div className="left-dash min-w-[18vw] bg-zinc-50 py-10 rounded-md">
       <div className="profile-detail flex flex-col items-center justify-center border-b-2 border-zinc-200 ">
-        <div className="uploadimage hidden">
-      <input type="file" name="image" onChange={handleFile}  />
-        <button  onClick={handleUpload}>Upload image</button>
+        <div className="uploadimage">
+      <input type="file" name="image" onChange={handleFile}  className="hidden" />
+        <button  className="profilepic rounded bg-slate-100 p-1" onClick={handleUpload}>Upload image</button>
       </div>
+        <div className="relative px-3">
         <div className="profile-img relative  overflow-hidden">
           <img
             className="rounded-full h-[12vh] w-[12vh] object-cover "
             src={`http://localhost:3000/images/`+image}
             alt=""
           />
-          <MdEdit className="absolute -right-1 bottom-0 w-6 h-6 rounded text-black cursor-pointer " onClick={handleEditClick} />
-          
+        </div>
+        <MdEdit className="absolute -right-1 bottom-0 w-6 h-6 rounded text-black cursor-pointer " onClick={handleEditClick} />
+
         </div>
         {auth ?  <div className="profile-name flex flex-col items-center py-4 ">
           <h1 className="capitalize font-semibold ">{name}</h1>
@@ -105,6 +123,7 @@ function Myaccount() {
           {message} --Pehle Login kar ---
         </h1>
       )}
+      
       </div>
       <div className="mybookings flex gap-3 items-center w-full py-5  px-10 border-b-2 border-zinc-200">
         <div className="w-3 h-3 bg-zinc-800 rounded-full"></div>
@@ -116,7 +135,7 @@ function Myaccount() {
         <div className="w-3 h-3 bg-zinc-800 rounded-full"></div>
         <h1 className="capitalize">
           {" "}
-          <Link to="/myaccount">Accounts</Link>{" "}
+          <Link to="/myaccount">My Account</Link>{" "}
         </h1>
       </div>
     </div>
@@ -136,14 +155,28 @@ function Myaccount() {
             <p>{email}</p>
           </div>
           <div className="flex items-center">
-            <label htmlFor="" className="mr-5">
+          <label htmlFor="" className="mr-5">
               Phone :{" "}
+            </label>
+            <p className="mr-2 p-1">+91</p>
+            <p>{phone}</p>
+          </div>
+          <div className="flex items-center">
+          <label htmlFor="" className="mr-5">
+              Change Phone :{" "}
             </label>
             <p className="mr-2 p-1">+91</p>
             <input
               className="p-1  border rounded border-zinc-400"
               type="text"
-              value={8310852112}
+              
+              pattern="[0-9]{10}" // Add your desired pattern here
+              title="Please enter valid phone number"
+              maxLength={10}
+              onChange={e => { 
+                const newValue = e.target.value;
+                setValues({...values ,phno: newValue});
+               }}
             />
           </div>
         </div>
@@ -156,16 +189,17 @@ function Myaccount() {
               <label htmlFor="" className="mr-5">
                 Name :{" "}
               </label>  
-              <p>{name}</p>
+              <p>hello - {name}</p>
             </div>
             <div className="flex items-center justify-center py-2">
               <label htmlFor="" className="mr-2">
                 Gender :{" "}
               </label>
-              <select name="" id="" className="p-1">
-                <option value="">Male</option>
-                <option value="">Female</option>
-                <option value="">Prefer not to say</option>
+              <select name="" id="" className="p-1"  onChange={e => { setValues({ ...values, gender: e.target.value }) }} >
+              <option value="">Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
               </select>
             </div>
           </div>
@@ -185,7 +219,14 @@ function Myaccount() {
               name=""
               id=""
               className="p-2 max-w-[30vw] h-32 border-2 rounded"
+              onChange={e => setValues({...values, address: e.target.value})}
             ></textarea>
+          </div>
+          <div className="update-btns">
+            <button className="bg-zinc-800 text-white px-4 py-2 rounded-md" onClick={handleUpdate}>
+              Update
+            </button>
+            {updated && <h1>Updated account details successfully</h1>}
           </div>
         </div>
       </div>

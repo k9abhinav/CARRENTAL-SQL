@@ -77,16 +77,6 @@ const handleUpdate = () => {
 
     });
 
-
-  //   useEffect(()=>{
-  //     axios.get('http://localhost:3000/see')
-  //     .then((response) => {
-  //        console.log(response);
-  //     }).catch((err) => console.log(err));
-  // },[]);
-
-
-  console.log(name);
   const handleLogout = () => {
     axios
       .get("http://localhost:3000/logout")
@@ -144,7 +134,7 @@ const handleUpdate = () => {
         <div className="w-3 h-3 bg-zinc-800 rounded-full"></div>
         <h1 className="capitalize">
           {" "}
-          <Link to="/myaccount">Accounts</Link>{" "}
+          <Link to="/myaccount">My Account</Link>{" "}
         </h1>
       </div>
     </div>

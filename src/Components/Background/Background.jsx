@@ -34,3 +34,4 @@ const Background = ({ playStatus, heroCount }) => {
 }
 
 export default Background;
+

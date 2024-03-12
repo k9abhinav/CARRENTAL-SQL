@@ -1,9 +1,8 @@
 import React from "react";
-import { Link,  useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Categories() {
 
-  // const navigate= useNavigate();
   // Categories representing different types of cars available for rental
 const categories = [
   { name: 'SUV', description: 'Spacious and versatile Sport Utility Vehicles, perfect for family trips and off-road adventures.' , route: '/suv' },
@@ -13,7 +12,7 @@ const categories = [
   { name: 'Sedan', description: 'Elegant and comfortable Sedans, suitable for business travel and long-distance cruising.', route: '/sedan' }
 ];
 
-  const color=[]
+  // const color=[]
   return (
     <div id="main" className="categories w-full min-h-screen bg-zinc-900 text-white">
       {categories.map((category,index) => (
@@ -23,7 +22,7 @@ const categories = [
         </div>
           <div className="flex flex-col w-[60vh] items-start gap-5 px-5 py-2 text-xl">
             <p className="w-full">{category.description}</p>
-        <Link className="rounded p-2 bg-zinc-50 text-black font-semibold" to={category.route} >Get now</Link>
+        <Link className="rounded-full px-6 py-2 bg-zinc-50 text-black font-semibold" to={category.route} >Get now</Link>
         </div>
 
       </div>

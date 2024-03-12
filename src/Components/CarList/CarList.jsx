@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import axios from 'axios'
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 // import { Grid,Card,CardContent,Typography, CardActions,Button } from '@mui/material'
 // import Container from '@mui/material/Container'
 // import Data from '../Data/Data.json'
@@ -11,31 +11,100 @@ import { Link } from 'react-router-dom';
 export default function CarList() {
   const [carData, setCarData] = useState([]);
   useEffect(() => {
-    axios.get('http://localhost:3000/viewcars',carData)
-    .then(res => setCarData(res.data))      //data is from backend
-    .catch(err=> console.log(err))
-    
-  },[])
+    axios
+      .get("http://localhost:3000/viewcars", carData)
+      .then((res) => setCarData(res.data)) //data is from backend
+      .catch((err) => console.log(err));
+  }, []);
   return (
-    <div className='w-full p-20'>
-      <h1 className='text-xl font-semibold mb-10'>List of cars</h1>
-      <div className='bg-zinc-100 w-full grid grid-cols-3 gap-10'>
-          
-          {Object.keys(carData).map((d, i) => (     //Object.keys(carData) is used to get an array of keys from the carData object.
-            <div key={i} className="bg-zinc-200 rounded-lg p-5">
-              <div className="image w-full h-4/6 bg-zinc-300">
-                <img className='rounded-lg w-full h-full mb-5' src={`http://localhost:3000/images/` + carData[i].car_image} alt="" />
-                </div>
-            <div className='font-bold'>{carData[i].model }</div> 
-            <div className='font-medium'>{carData[i].color }</div>
-            <div className="bg-zinc-200">{carData[i].c_type }</div>
-              <div className="bg-zinc-200">{carData[i].capacity}</div>
-              <Link to={`/carlist/${carData[i].model}`}><button className='border-[1px]ww border-zinc-900 bg-[blueviolet] px-2 py-1 rounded-md text-white'>Book</button></Link> 
+
+<div className="container mx-auto p-10">
+      <h1 className="text-2xl font-semibold mb-8">List of Cars</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {carData.map((car, index) => (
+          <div key={index} className="border border-gray-200 rounded-lg overflow-hidden shadow-md">
+            <img
+              className="w-full h-56 object-cover rounded-t-lg"
+              src={`http://localhost:3000/images/${car.car_image}`}
+              alt={car.model}
+            />
+            <div className="p-4">
+              <h2 className="font-semibold text-lg mb-2">{car.model}</h2>
+              <p className="text-gray-600 mb-2">Color: {car.color}</p>
+              <p className="text-gray-600 mb-2">Type: {car.c_type}</p>
+              <p className="text-gray-600 mb-4">Capacity: {car.capacity}</p>
+              <Link to={`/carlist/${car.model}`}>
+                <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+                  Book
+                </button>
+              </Link>
             </div>
-            ))}
+          </div>
+        ))}
       </div>
-    </div>    
-      
+    </div>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // <div className="w-full p-20">
+    //   <h1 className="text-xl font-semibold pb-10">List of cars</h1>
+    //   <div className=" w-full grid grid-cols-3 gap-10 ">
+    //     {Object.keys(carData).map(
+    //       (
+    //         d,
+    //         i //Object.keys(carData) is used to get an array of keys from the carData object.
+    //       ) => (
+    //         <div key={i} className="outerdiv shadow-md">
+    //           <div className="image w-full h-4/6  overflow-hidden">
+    //             <img
+    //               className="rounded-tr-lg rounded-tl-lg w-full h-full"
+    //               src={`http://localhost:3000/images/` + carData[i].car_image}
+    //               alt=""
+    //             />
+    //           </div>
+    //           <div className="innerdiv rounded-br-lg rounded-bl-lg  p-5">
+              
+    //           <div className="font-bold">{carData[i].model}</div>
+    //           <div className="font-medium">{carData[i].color}</div>
+    //           <div className="">{carData[i].c_type}</div>
+    //           <div className="">{carData[i].capacity}</div>
+    //           <Link to={`/carlist/${carData[i].model}`}>
+    //             <button className="border-[1px]ww border-zinc-900 bg-[blueviolet] px-3 py-1 rounded-md text-white">
+    //               Book
+    //             </button>
+    //           </Link>
+    //           </div>
+    //         </div>
+    //       )
+    //     )}
+    //   </div>
+    // </div>
 
     /* <Container maxWidth="lg">
         <Typography variant='h4' align='center' style={{marginTop:"50px",color:"white"}}>
@@ -85,8 +154,5 @@ export default function CarList() {
         </Grid>
 
     </Container> */
-    
-  )
+  );
 }
-
-

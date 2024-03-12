@@ -4,19 +4,6 @@ import { MdEdit } from "react-icons/md";
 import axios from "axios";
 
 function Mybookings() {
-  // return (
-  //   <div>
-  //     <div className="dashboard bg-zinc-200 w-full min-h-screen px-10 py-5 flex gap-5">
-  //       <Leftdash />
-  //       <div className="right-dash bg-zinc-50 rounded-md w-full">
-  //         <div className="head w-full text-center uppercase py-5 border-b-2 border-zinc-200">
-  //           <h1 className="font-regular text-2xl">My account</h1>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
-
   const [auth, setauth] = useState(false);
   const [message, setmessage] = useState("");
   const [name, setname] = useState("");
@@ -25,6 +12,7 @@ function Mybookings() {
   const [image, setimage] = useState()
   axios.defaults.withCredentials = true;
   const [file, setfile] = useState();
+
 
   const handleFile = (e) => {
     setfile(e.target.files[0]);
@@ -41,6 +29,9 @@ function Mybookings() {
         console.log(err);
       });
   };
+
+ 
+
   useEffect(() => {
     axios
       .get("http://localhost:3000")
@@ -65,14 +56,6 @@ function Mybookings() {
     });
 
 
-    useEffect(()=>{
-      axios.get('http://localhost:3000/see')
-      .then((response) => {
-         console.log(response);
-      }).catch((err) => console.log(err));
-  },[]);
-
-
   console.log(name);
   const handleLogout = () => {
     axios
@@ -94,18 +77,20 @@ function Mybookings() {
     <div className="dashboard bg-zinc-200 w-full min-h-screen px-10 py-5 flex gap-5">
       <div className="left-dash min-w-[18vw] bg-zinc-50 py-10 rounded-md">
       <div className="profile-detail flex flex-col items-center justify-center border-b-2 border-zinc-200 ">
-        <div className="uploadimage hidden">
-      <input type="file" name="image" onChange={handleFile}  />
-        <button  onClick={handleUpload}>Upload image</button>
+        <div className="uploadimage">
+      <input type="file" name="image" onChange={handleFile}  className="hidden" />
+        <button  className="profilepic rounded bg-slate-100 p-1" onClick={handleUpload}>Upload image</button>
       </div>
+        <div className="relative px-3">
         <div className="profile-img relative  overflow-hidden">
           <img
             className="rounded-full h-[12vh] w-[12vh] object-cover "
             src={`http://localhost:3000/images/`+image}
             alt=""
           />
-          <MdEdit className="absolute -right-1 bottom-0 w-6 h-6 rounded text-black cursor-pointer " onClick={handleEditClick} />
-          
+        </div>
+        <MdEdit className="absolute -right-1 bottom-0 w-6 h-6 rounded text-black cursor-pointer " onClick={handleEditClick} />
+
         </div>
         {auth ?  <div className="profile-name flex flex-col items-center py-4 ">
           <h1 className="capitalize font-semibold ">{name}</h1>
@@ -117,12 +102,7 @@ function Mybookings() {
           {message} --Pehle Login kar ---
         </h1>
       )}
-        {/* <div className="profile-name flex flex-col items-center py-4 ">
-          <h1 className="capitalize font-semibold ">{name}</h1>
-          <h4 className="text-zinc-700 font-light text-xs">{phone}</h4>
-          <h4 className="text-zinc-700 font-light text-xs">{email}</h4>
-          <button onClick={handleLogout}>Logout</button>
-        </div> */}
+      
       </div>
       <div className="mybookings flex gap-3 items-center w-full py-5  px-10 border-b-2 border-zinc-200">
         <div className="w-3 h-3 bg-zinc-800 rounded-full"></div>
@@ -134,14 +114,14 @@ function Mybookings() {
         <div className="w-3 h-3 bg-zinc-800 rounded-full"></div>
         <h1 className="capitalize">
           {" "}
-          <Link to="/myaccount">Accounts</Link>{" "}
+          <Link to="/myaccount">My Account</Link>{" "}
         </h1>
       </div>
     </div>
       
       <div className="right-dash bg-zinc-50 rounded-md w-full">
         <div className="head w-full text-center uppercase py-5 border-b-2 border-zinc-200">
-          <h1 className="font-regular text-2xl">My account</h1>
+          <h1 className="font-regular text-2xl">My bookings</h1>
         </div>
         
         
