@@ -30,19 +30,11 @@ function Home() {
           playStatus={playStatus}
           />
         <Categories/>
-<<<<<<< HEAD
         {/* <div className="LOGIN w-full h-[50vh] flex items-center justify-around font-semibold text-3xl text-white bg-slate-700">
           ---LINKS---
         <Link to="/login">LOGINN</Link>
         <Link to="/register">REGISTER</Link>
         </div> */}
-=======
-        <div className="LOGIN w-full h-[50vh] flex items-center justify-around font-semibold text-3xl text-white bg-slate-700">
-          ---LINKS---
-        <Link to="/login">LOGINN</Link>
-        <Link to="/register">REGISTER</Link>
-        </div>
->>>>>>> origin/master
     </div>
   )
 }

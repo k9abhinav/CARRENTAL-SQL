@@ -15,11 +15,7 @@ function Login() {
         axios.post('http://localhost:3000/login', values)
             .then(res => {
                 if (res.data.Status === "Success") {
-<<<<<<< HEAD
                     navigate('/mybooking');
-=======
-                    navigate('/dash');
->>>>>>> origin/master
                 } else {
                     alert(res.data.Error);
                 }
@@ -28,12 +24,8 @@ function Login() {
     }
 
     return (
-<<<<<<< HEAD
         <div className="w-full min-h-screen flex items-center justify-center">
             <div className="w-[30vw] p-4 border rounded-lg bg-gray-100 ">
-=======
-        <div className="max-w-md mx-auto p-4 border rounded-lg bg-gray-100">
->>>>>>> origin/master
             <h2 className="text-center">Login</h2>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -59,10 +51,7 @@ function Login() {
             <p className="text-center mt-4">CREATE NEW ACCOUNT</p>
             <Link to="/register" className="block text-center mt-2 text-blue-500 hover:underline">Register</Link>
         </div>
-<<<<<<< HEAD
         </div>
-=======
->>>>>>> origin/master
     );
 }
 

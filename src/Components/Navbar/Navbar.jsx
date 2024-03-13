@@ -9,10 +9,7 @@ const Navbar = () => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [auth, setauth] = useState(false);
   const [name, setname] = useState("");
-<<<<<<< HEAD
   axios.defaults.withCredentials = true;
-=======
->>>>>>> origin/master
 
   useEffect(() => {
     axios.get("http://localhost:3000")
@@ -26,18 +23,12 @@ const Navbar = () => {
   })
   .then((err) => console.log(err));
 
-<<<<<<< HEAD
   },[name,auth]);
-=======
-
-  },[])
->>>>>>> origin/master
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
-<<<<<<< HEAD
   const handleLogout = () => {
     axios
       .get("http://localhost:3000/logout")
@@ -51,10 +42,6 @@ const Navbar = () => {
 
   return (
     <div className="nav ">
-=======
-  return (
-    <div className="nav">
->>>>>>> origin/master
       <div className="nav-logo text-6xl font-semibold" >Fleeto.</div>
       <ul className="nav-menu font-bold  uppercase">
         <li>
@@ -67,7 +54,6 @@ const Navbar = () => {
           <Link to="/carlist">Carlist</Link>
         </li>
         <li className="">
-<<<<<<< HEAD
          <button onClick={toggleDropdown} className="relative  bg-[#F0F3F5] rounded-md p-2 flex flex-col items-center ">
          {auth ?  <button className=" flex items-center gap-2 ">{name.length > 6 ? name.substring(0, 6) + "..." : name}<RiAccountCircleFill  size={28} /><IoIosArrowDown /></button> :  <button className=" flex items-center gap-2"><RiAccountCircleFill  size={28} /><IoIosArrowDown /></button>  }
          {dropdownVisible && (
@@ -75,16 +61,6 @@ const Navbar = () => {
             {auth ? <div className="flex flex-col items-start w-full text-md  "><Link to="/dash" className="" >Dashboard</Link><button onClick={handleLogout}>Logout</button></div> : <div className="flex flex-col items-start w-full text-md"><Link to="/login" className="" >Login/Register</Link></div>}
           </ul>
          )}
-=======
-         <button onClick={toggleDropdown} className="relative  bg-slate-50 rounded-md p-2 flex flex-col items-center">
-         {auth ?  <button className=" flex items-center gap-2">{name.length > 6 ? name.substring(0, 6) + "..." : name}<RiAccountCircleFill  size={28} /><IoIosArrowDown /></button> :  <button className=" flex items-center gap-2">Sign in <RiAccountCircleFill  size={28} /><IoIosArrowDown /></button>  }
-         {dropdownVisible && (
-          <ul className="dropdown-menu absolute top-[5vh] bg-slate-50 rounded-bl-md rounded-br-md p-2 min-w-inherit">
-            {auth ? <Link to="/dash">Dashboard</Link> : <Link to="/login">Login / Register</Link>}
-          </ul>
-         )}
- 
->>>>>>> origin/master
           </button>         
         </li>
       </ul>

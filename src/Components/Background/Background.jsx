@@ -6,13 +6,7 @@ import image2 from '../../Assets/image22.jpg';
 import image3 from '../../Assets/image2.png';
 
 const Background = ({ playStatus, heroCount }) => {
-<<<<<<< HEAD
   // const [currentBackground, setCurrentBackground] = useState(0);
-=======
-  const [currentBackground, setCurrentBackground] = useState(0);
-
- 
->>>>>>> origin/master
   // const backgrounds = [image1, image2, image3];
 
   // useEffect(() => {

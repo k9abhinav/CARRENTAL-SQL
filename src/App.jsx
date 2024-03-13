@@ -21,7 +21,6 @@ import AdminCarAdd from "./Components/AdminCar/AdminCarAdd";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Components/Login/Login";
 import Register from "./Components/Login/Register";
-<<<<<<< HEAD
 import Footer from "./Components/Footer/Footer";
 import React, {  useState,useEffect } from "react";
 import axios from "axios";
@@ -42,12 +41,6 @@ const App = () => {
 
   },[auth]);
 
-=======
-
-const App = () => {
-  
-  
->>>>>>> origin/master
   // eslint-disable-next-line no-unused-vars
   const scroll = new LocomotiveScroll();
   return (
@@ -57,11 +50,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/carlist" element={<CarList />} />
-<<<<<<< HEAD
           <Route path="/dash" element={auth ? <Dashboard /> : <Login />} />
-=======
-          <Route path="/dash" element={<Dashboard />} />
->>>>>>> origin/master
           <Route path="/carlist/:model/proceed" element={<Form />} />
           <Route path="/carlist/:model" element={<CarDetail />} />
           <Route path="/myaccount" element={<Myaccount />} />
@@ -80,10 +69,7 @@ const App = () => {
           <Route path="/convertible" element={<Convertible/>} />
           <Route path="/sedan" element={<Sedancars/>} />
         </Routes>
-<<<<<<< HEAD
         <Footer />
-=======
->>>>>>> origin/master
       </BrowserRouter>
     </div>
   );

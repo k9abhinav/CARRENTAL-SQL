@@ -4,31 +4,15 @@ body{
 
 
 .nav{
-<<<<<<< HEAD
     padding: 12px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-=======
-    /* position: fixed; */
-    /* left: 0; */
-    /* right: 0; */
-    /* top: 0; */
-    padding: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0px 120px;
->>>>>>> origin/master
     color: red;
 }
 .nav-logo{
     font-family: Outfit;
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> origin/master
 }
 .nav-menu{
     display: flex;
@@ -36,18 +20,11 @@ body{
     list-style: none;
     font-size: 18px;
     gap: 90px;
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> origin/master
 }
 li{
     display: flex;
     flex-direction: column;
     align-items: center;
-<<<<<<< HEAD
     
-=======
->>>>>>> origin/master
 }

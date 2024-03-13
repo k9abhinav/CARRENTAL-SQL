@@ -144,11 +144,7 @@ function Form() {
         <p className='my-1 text-sm'>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
         <h1 id="fareCost" className='my-1 text-md'>Rs.{fareFee}</h1>
        <button className='border-[1px] border-zinc-500 p-2 rounded-md bg-violet-500 text-white'
-<<<<<<< HEAD
           disabled={!isAgreed || !fromDate || !toDate}   >Proceed to pay</button>
-=======
-          disabled={!isAgreed || !fromDate || !toDate}>Proceed to pay</button>
->>>>>>> origin/master
         
         {/* disabled if user hasn't agreed in the sense the checkbox is unchecked i.e false so !false is true which will make it disabled */}
       </div>
