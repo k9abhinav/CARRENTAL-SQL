@@ -27,4 +27,8 @@ li{
     display: flex;
     flex-direction: column;
     align-items: center;
+    
+}
+.same-width{
+    width: inherit !important;
 }

@@ -47,10 +47,9 @@ const Navbar = () => {
          {auth ?  <button className=" flex items-center gap-2">{name.length > 6 ? name.substring(0, 6) + "..." : name}<RiAccountCircleFill  size={28} /><IoIosArrowDown /></button> :  <button className=" flex items-center gap-2">Sign in <RiAccountCircleFill  size={28} /><IoIosArrowDown /></button>  }
          {dropdownVisible && (
           <ul className="dropdown-menu absolute top-[5vh] bg-slate-50 rounded-bl-md rounded-br-md p-2 min-w-inherit">
-            {auth ? <Link to="/dash">Dashboard</Link> : <Link to="/login">Login / Register</Link>}
+            {auth ? <Link to="/dash" className="same-width" >Dashboard</Link> : <Link to="/login" className="same-width" >Login / Register</Link>}
           </ul>
          )}
- 
           </button>         
         </li>
       </ul>

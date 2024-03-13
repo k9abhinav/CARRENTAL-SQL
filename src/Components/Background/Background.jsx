@@ -6,29 +6,30 @@ import image2 from '../../Assets/image22.jpg';
 import image3 from '../../Assets/image2.png';
 
 const Background = ({ playStatus, heroCount }) => {
-  const [currentBackground, setCurrentBackground] = useState(0);
+  // const [currentBackground, setCurrentBackground] = useState(0);
+  // const backgrounds = [image1, image2, image3];
 
- 
-  const backgrounds = [image1, image2, image3];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
      
-      setCurrentBackground((prev) => (prev + 1) % backgrounds.length);
-    }, 3000); 
+  //     setCurrentBackground((prev) => (prev + 1) % backgrounds.length);
+  //   }, 3000); 
 
-    return () => clearInterval(interval); 
-  }, [currentBackground]);
+  //   return () => clearInterval(interval); 
+  // }, [currentBackground]);
 
   return (
     <div className='background-container'>
-      {currentBackground !== backgrounds.length - 1 ? (
+      {/* {currentBackground !== backgrounds.length - 1 ? (
         <img src={backgrounds[currentBackground]} className='background fade-in' alt={`Image ${currentBackground + 1}`} />
       ) : (
         <video className='background' autoPlay loop muted>
           <source src={video1} type='video/mp4' />
         </video>
-      )}
+      )} */}
+      <video className='background' autoPlay loop muted>
+          <source src={video1} type='video/mp4' />
+        </video>
     </div>
   );
 }
