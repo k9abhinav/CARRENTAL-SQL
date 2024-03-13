@@ -1,0 +1,35 @@
+[
+    {
+        "id": 1,
+        "title": "Mahindra Thar",
+        "des": "Manual.Petrol.5stars",
+       
+        "desc2":"4.9",
+        "img": "https://zoomcar-assets.zoomcar.com/25581/HostCarImage/host_car_image_25581a9f56464-c1f7-4a24-93e0-702f015ff6d7.jpg20230109-32-1bqlw7w"
+    },
+    {
+        "id": 2,
+        "title": "Car1",
+        "des": "I am Shashidar",
+        "desc1":"Manual.Petrol.5stars",
+        "img": "https://zoomcar-assets.zoomcar.com/21327/HostCarImage/host_car_image_213271f5e1f05-924c-4995-a4fb-1b84d13b2016.jpg20230308-42-178r3to"
+    },
+    {
+        "id": 3,
+        "title": "Car1",
+        "des": "Hello there",
+        "img": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1883&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+        "id": 4,
+        "title": "Car1",
+        "des": "Hello there",
+        "img": "https://plus.unsplash.com/premium_photo-1682125726825-3c0049c0aae3?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+        "id": 5,
+        "title": "Car5",
+        "des": "Hello there",
+        "img": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1883&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    }
+]
