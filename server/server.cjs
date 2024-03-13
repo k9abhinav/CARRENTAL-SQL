@@ -65,7 +65,7 @@ const upload = multer({
   //   fileSize: 1024 * 1024 * 5
   // }
 })
-=======
+
 app.use(
   cors({
     origin: ["http://localhost:5173"],
@@ -189,7 +189,7 @@ app.get('/view_offroad', (req, res) => {
   })
 })
 app.get('/user', (req, res) => {
-=======
+
     // cb(null,"C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images")
     cb(
       null,
@@ -262,7 +262,6 @@ app.get("/user", (req, res) => {
   //   if (err) return res.json(err)
   //   return res.json(data)
   // })
-<<<<<<< HEAD
 })
   
 //insert car
@@ -316,7 +315,6 @@ app.get('/see', (req, res, )=>{
   // const userid = req.user_id; // contains the user's ID
   // console.log(userid);
 })
-=======
 });
 
 //insert car
@@ -438,22 +436,14 @@ app.get("/see", (req, res) => {
     }
   });
 });
->>>>>>> origin/master
 
 const verifyUser = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
-<<<<<<< HEAD
     // console.log("No token means no logged in user");
     return res.json({ Error: "Invalid token" });
   } else {
     jwt.verify(token, process.env.token_secret, (err, decoded) => {
-=======
-    console.log("No token means no logged in user");
-    return res.json({ Error: "Invalid token" });
-  } else {
-    jwt.verify(token, "hehe", (err, decoded) => {
->>>>>>> origin/master
       if (err) {
         return res.json({ Error: err });
       } else {
@@ -468,25 +458,6 @@ const verifyUser = (req, res, next) => {
 //   return res.json({ Status:"Success",name:req.name})
 // });
 
-<<<<<<< HEAD
-app.get("/", verifyUser , (req, res) => {
-  const token = req.cookies.token;
-  if(!token){
-    return res.json({ Error: "Invalid token" });
-  }
-  else{
-    jwt.verify(token, process.env.token_secret, (err, decoded) => {
-      if(err){
-        return res.json({ Error : err });
-      }
-      else{
-        const user_id = decoded.user_id; // Get user_id from decoded token
-        const sql = "SELECT u.email, a.image, a.phno,u.fullname FROM user u JOIN account a ON u.user_id = a.user_id WHERE u.user_id = ?";
-        db.query(sql, [user_id], (err, data) => {
-          if (err) {
-            console.error("Database error:", err);
-            return res.json({ Error: "An error occurred while fetching user data" });
-=======
 app.get("/", verifyUser, (req, res) => {
   const token = req.cookies.token;
   if (!token) {
@@ -505,7 +476,6 @@ app.get("/", verifyUser, (req, res) => {
             return res.json({
               Error: "An error occurred while fetching user data",
             });
->>>>>>> origin/master
           }
           if (data.length === 0) {
             return res.json({ Error: "No user found with that user_id" });
@@ -518,17 +488,6 @@ app.get("/", verifyUser, (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-
-app.post("/register", (req, res) => {
-  const { fullname , email, password , phno } = req.body;
-  const hashedPassword = bcrypt.hashSync(password, 10); // Hash the password
-
-  const sql = "INSERT INTO user (fullname , email, password,phno) VALUES (?, ?, ?, ?)";
-  const sql1 = "INSERT INTO account (user_id, fullname, phno) VALUES (?, ?, ?)";
-
-  const userValues = [fullname, email, hashedPassword , phno]; 
-=======
 app.post("/register", (req, res) => {
   const { fullname, email, password, phno } = req.body;
   const hashedPassword = bcrypt.hashSync(password, 10); // Hash the password
@@ -538,27 +497,10 @@ app.post("/register", (req, res) => {
   const sql1 = "INSERT INTO account (user_id, fullname, phno) VALUES (?, ?, ?)";
 
   const userValues = [fullname, email, hashedPassword, phno];
->>>>>>> origin/master
 
   db.query(sql, userValues, (err, result) => {
     if (err) {
       console.error("Database error:", err);
-<<<<<<< HEAD
-      return res.json({ Error: "An error occurred while registering the user" });
-    }
-    
-    // Get the inserted user_id
-    const userId = result.insertId;
-    
-    const accountValues = [userId, fullname, phno];
-  
-    db.query(sql1, accountValues, (err, result) => {
-      if (err) {
-        console.error("Database error for account query:", err);
-        return res.json({ Error: "An error occurred while querying the Account table" });
-      }
-      
-=======
       return res.json({
         Error: "An error occurred while registering the user",
       });
@@ -577,17 +519,13 @@ app.post("/register", (req, res) => {
         });
       }
 
->>>>>>> origin/master
       console.log("Successfully inserted into account table");
       return res.json({ Status: "Success" });
     });
   });
 });
 
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/master
 app.post("/login", (req, res) => {
   if (!req.body.password || !req.body.email) {
     return res.status(400).json({ error: "Email and password are required" });
@@ -595,13 +533,6 @@ app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
   const sql = "SELECT * FROM user WHERE email = ?";
-<<<<<<< HEAD
-  
-  db.query(sql, [email], (err, data) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.json({ Error: "An error occurred while retrieving user data" });
-=======
 
   db.query(sql, [email], (err, data) => {
     if (err) {
@@ -609,7 +540,6 @@ app.post("/login", (req, res) => {
       return res.json({
         Error: "An error occurred while retrieving user data",
       });
->>>>>>> origin/master
     }
     if (data.length === 0) {
       return res.json({ Error: "No user found with that email" });
@@ -621,41 +551,14 @@ app.post("/login", (req, res) => {
       return res.json({ Error: "Invalid password" });
     }
     const details = {
-<<<<<<< HEAD
-      user_id: user.user_id
-    };
-    const token = jwt.sign(details, process.env.token_secret )
-    res.cookie('token', token)
-=======
       user_id: user.user_id,
     };
     const token = jwt.sign(details, "hehe");
     res.cookie("token", token);
->>>>>>> origin/master
     return res.json({ Status: "Success" });
   });
 });
 
-<<<<<<< HEAD
-app.get("/logout",(req, res) => {
-  res.clearCookie('token');
-  return res.json({ Status: "Success" });
-})
-
-// ------------------------------------------------------------------------------------------------
-
-app.post('/upload', verifyUser, upload.single('image'), (req, res) => {
-  const image = req.file.filename;
-  // console.log(image)
-  const userid = req.user_id; // contains the user's ID
-  console.log(userid);
-  const sql = "UPDATE account SET image = ? WHERE user_id = ?";
-  
-  db.query(sql, [image, userid], (err, data) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.json({ Error: "An error occurred while updating the image for the user" });
-=======
 app.get("/logout", (req, res) => {
   res.clearCookie("token");
   return res.json({ Status: "Success" });
@@ -675,26 +578,12 @@ app.post("/upload", verifyUser, upload.single("image"), (req, res) => {
       return res.json({
         Error: "An error occurred while updating the image for the user",
       });
->>>>>>> origin/master
     }
     console.log("Successfully updated image for the user");
     return res.json({ Status: "Success" });
   });
 });
 
-<<<<<<< HEAD
-app.post('/update-account',verifyUser, (req, res) => {
-  const userid = req.user_id; // contains the user's ID
-  console.log(userid);
-  const { gender, phno,address } = req.body;
-  let sql = "UPDATE account SET  gender =?,phno=?,address =?  WHERE user_id=?";
-  db.query(sql,[gender,phno,address,userid],(err, data) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.json({ Error: "An error occurred while updating the address gender for the account table" });
-    }
-    console.log("Successfully updated gender phno and address for the accounnt");
-=======
 app.post("/update-account", verifyUser, (req, res) => {
   const userid = req.user_id; // contains the user's ID
   console.log(userid);
@@ -711,46 +600,10 @@ app.post("/update-account", verifyUser, (req, res) => {
     console.log(
       "Successfully updated gender phno and address for the accounnt"
     );
->>>>>>> origin/master
     return res.json({ Status: "Success" });
   });
 });
 
-<<<<<<< HEAD
-app.get('/users_order', verifyUser,(req, res) => {
-  const token = req.cookies.token;
-  if(!token){
-    return res.json({ Error: "Invalid token" });
-  }
-  else{
-    jwt.verify(token, process.env.token_secret, (err, decoded) => {
-      if(err){
-        return res.json({ Error : err });
-      }
-      else{
-        const user_id = decoded.user_id; // Get user_id from decoded token
-        let sql = "SELECT c.color,c.c_type,c.cno,c.model,c.capacity,cc.category_name,o.order_id,o.s_date,o.e_date,o.d_type FROM orders as o,account as a,car as c,CarCategory as cc WHERE o.user_id = a.user_id and c.car_id = o.car_id and cc.category_id = c.category_id and a.user_id =?";
-        db.query(sql, [user_id], (err, data) => {
-          if (err) {
-            console.error("Database error:", err);
-            return res.json({ Error: "An error occurred while getting users order details" });
-          }
-          if (data.length === 0) {
-            return res.json({ Error: "No user order found with that user_id" });
-          }
-          const userData = data;
-          return res.json({ Status: "Success",  userData });
-        });
-      }
-    });
-  }
-  
-  
-  
-})
-
-=======
->>>>>>> origin/master
 const port = 3000;
 app.listen(port, () => {
   console.log(`SERVER app listening on port ${port}`);

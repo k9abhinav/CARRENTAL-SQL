@@ -18,7 +18,6 @@ export default function CarList() {
   }, []);
   return (
 
-<<<<<<< HEAD
 <div className="container mx-auto p-10 bg-[#F0F3F5]">
       <div className="filters w-full flex pb-5 gap-4">
         <div className="p-2 bg-white rounded-md">Fast</div>
@@ -30,13 +29,6 @@ export default function CarList() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {carData.map((car, index) => (
           <div key={index} className="border border-gray-200 rounded-lg bg-white overflow-hidden shadow-md">
-=======
-<div className="container mx-auto p-10">
-      <h1 className="text-2xl font-semibold mb-8">List of Cars</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {carData.map((car, index) => (
-          <div key={index} className="border border-gray-200 rounded-lg overflow-hidden shadow-md">
->>>>>>> origin/master
             <img
               className="w-full h-56 object-cover rounded-t-lg"
               src={`http://localhost:3000/images/${car.car_image}`}
