@@ -177,14 +177,17 @@ app.get('/see', (req, res, )=>{
     }
     else{
       res.json(data);
+    
     }
   })
+  // const userid = req.user_id; // contains the user's ID
+  // console.log(userid);
 })
 
 const verifyUser = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
-    console.log("No token means no logged in user");
+    // console.log("No token means no logged in user");
     return res.json({ Error: "Invalid token" });
   } else {
     jwt.verify(token, process.env.token_secret, (err, decoded) => {
@@ -307,6 +310,7 @@ app.post('/upload', verifyUser, upload.single('image'), (req, res) => {
   const image = req.file.filename;
   // console.log(image)
   const userid = req.user_id; // contains the user's ID
+  console.log(userid);
   const sql = "UPDATE account SET image = ? WHERE user_id = ?";
   
   db.query(sql, [image, userid], (err, data) => {
@@ -332,7 +336,39 @@ app.post('/update-account',verifyUser, (req, res) => {
     console.log("Successfully updated gender phno and address for the accounnt");
     return res.json({ Status: "Success" });
   });
-}); 
+});
+
+app.get('/users_order', verifyUser,(req, res) => {
+  const token = req.cookies.token;
+  if(!token){
+    return res.json({ Error: "Invalid token" });
+  }
+  else{
+    jwt.verify(token, process.env.token_secret, (err, decoded) => {
+      if(err){
+        return res.json({ Error : err });
+      }
+      else{
+        const user_id = decoded.user_id; // Get user_id from decoded token
+        let sql = "SELECT c.color,c.c_type,c.cno,c.model,c.capacity,cc.category_name,o.order_id,o.s_date,o.e_date,o.d_type FROM orders as o,account as a,car as c,CarCategory as cc WHERE o.user_id = a.user_id and c.car_id = o.car_id and cc.category_id = c.category_id and a.user_id =?";
+        db.query(sql, [user_id], (err, data) => {
+          if (err) {
+            console.error("Database error:", err);
+            return res.json({ Error: "An error occurred while getting users order details" });
+          }
+          if (data.length === 0) {
+            return res.json({ Error: "No user order found with that user_id" });
+          }
+          const userData = data;
+          return res.json({ Status: "Success",  userData });
+        });
+      }
+    });
+  }
+  
+  
+  
+})
 
 const port = 3000;
 app.listen(port, () => {

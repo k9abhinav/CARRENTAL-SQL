@@ -15,7 +15,7 @@ function Login() {
         axios.post('http://localhost:3000/login', values)
             .then(res => {
                 if (res.data.Status === "Success") {
-                    navigate('/dash');
+                    navigate('/mybooking');
                 } else {
                     alert(res.data.Error);
                 }
