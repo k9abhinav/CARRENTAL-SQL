@@ -4,7 +4,8 @@ const express = require("express");
 require("dotenv").config();
 const mysql = require("mysql2");
 const cors = require("cors");
-const bcrypt = require("bcrypt"); // Import bcrypt library
+const bcrypt = require("bcrypt");
+const bodyParser = require('body-parser');
 const app = express();
 const multer = require("multer");
 const path = require("path");
@@ -14,11 +15,12 @@ app.use(express.json());
 app.use(
   cors({
     origin: ["http://localhost:5173"],
-    methods: ["POST", "GET"],
+    methods: ["POST", "GET","DELETE"],
     credentials: true,
   })
 );
 app.use(cookieParser());
+app.use(bodyParser.json());
 app.use(
   express.static(
     "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server"
@@ -342,7 +344,17 @@ app.get("/see", (req, res) => {
   });
 });
 
-app.post("/cancel_orders")
+app.delete("/cancel_orders/:orderId",verifyUser,(req, res) => {
+  const orderId = req.params.orderId;
+  console.log(orderId);
+  const sql ="DELETE FROM orders WHERE order_id = ?"
+  db.query(sql,[orderId], (err, data) => {
+    if(err) return console.error("Database error:", err);
+    else{
+      return console.log(data,"\n SUCESS OF ORDER CANCEL");
+    }
+  })
+})
 
 app.get("/", verifyUser, (req, res) => {
   const token = req.cookies.token;
@@ -501,7 +513,7 @@ app.get("/users_order", verifyUser, (req, res) => {
       } else {
         const user_id = decoded.user_id; // Get user_id from decoded token
         let sql =
-          "SELECT c.color,c.c_type,c.cno,c.model,c.capacity,cc.category_name,o.order_id,o.s_date,o.e_date,o.d_type FROM orders as o,account as a,car as c,CarCategory as cc WHERE o.user_id = a.user_id and c.car_id = o.car_id and cc.category_id = c.category_id and a.user_id =?";
+          "SELECT c.color,c.c_type,c.cno,c.model,c.capacity,c.car_image,cc.category_name,o.order_id,o.s_date,o.e_date,o.d_type FROM orders as o,account as a,car as c,CarCategory as cc WHERE o.user_id = a.user_id and c.car_id = o.car_id and cc.category_id = c.category_id and a.user_id =?";
         db.query(sql, [user_id], (err, data) => {
           if (err) {
             console.error("Database error:", err);
