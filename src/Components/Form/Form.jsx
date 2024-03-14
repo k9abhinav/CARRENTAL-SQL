@@ -12,7 +12,6 @@ function Form() {
   const [isAgreed, setIsAgreed] = useState(false);
   const [car, setCar] = useState();
   const [values, setValues] = useState({
-
     car_id:'',
     startDate: '',
     endDate: '',
