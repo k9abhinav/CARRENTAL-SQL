@@ -54,11 +54,11 @@ const Navbar = () => {
           <Link to="/carlist">Carlist</Link>
         </li>
         <li className="">
-         <button onClick={toggleDropdown} className="relative  bg-[#F0F3F5] rounded-md p-2 flex flex-col items-center ">
-         {auth ?  <button className=" flex items-center gap-2 ">{name.length > 6 ? name.substring(0, 6) + "..." : name}<RiAccountCircleFill  size={28} /><IoIosArrowDown /></button> :  <button className=" flex items-center gap-2"><RiAccountCircleFill  size={28} /><IoIosArrowDown /></button>  }
+         <button onClick={toggleDropdown} className="relative  bg-[#F0F3F5] rounded-md p-2 flex flex-col items-center">
+         {auth ?  <button className=" flex items-center gap-2">{name.length > 6 ? name.substring(0, 6) + "..." : name}<RiAccountCircleFill  size={28} /><IoIosArrowDown /></button> :  <button className=" flex items-center gap-2">Sign in <RiAccountCircleFill  size={28} /><IoIosArrowDown /></button>  }
          {dropdownVisible && (
-          <ul className="dropdown-menu absolute top-[5vh] bg-[#F0F3F5] rounded-bl-md rounded-br-md p-2 min-w-max">
-            {auth ? <div className="flex flex-col items-start w-full text-md  "><Link to="/dash" className="" >Dashboard</Link><button onClick={handleLogout}>Logout</button></div> : <div className="flex flex-col items-start w-full text-md"><Link to="/login" className="" >Login/Register</Link></div>}
+          <ul className="dropdown-menu absolute top-[5vh] bg-[#F0F3F5] rounded-bl-md rounded-br-md p-2 w-full">
+            {auth ? <div className="flex flex-col items-start w-full text-md"><Link to="/dash" className="" >Dashboard</Link><button onClick={handleLogout}>Logout</button></div> : <div className="flex flex-col items-start w-full text-md"><Link to="/login" className="" >Login/Register</Link></div>}
           </ul>
          )}
           </button>         
