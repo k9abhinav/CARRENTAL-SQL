@@ -4,20 +4,15 @@ body{
 
 
 .nav{
-    /* position: fixed; */
-    /* left: 0; */
-    /* right: 0; */
-    /* top: 0; */
-    padding: 12px;
+    padding: 12px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0px 120px;
     color: red;
 }
 .nav-logo{
     font-family: Outfit;
-    
+
 }
 .nav-menu{
     display: flex;
@@ -25,10 +20,11 @@ body{
     list-style: none;
     font-size: 18px;
     gap: 90px;
-    
+
 }
 li{
     display: flex;
     flex-direction: column;
     align-items: center;
+    
 }

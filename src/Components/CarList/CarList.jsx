@@ -18,11 +18,17 @@ export default function CarList() {
   }, []);
   return (
 
-<div className="container mx-auto p-10">
-      <h1 className="text-2xl font-semibold mb-8">List of Cars</h1>
+<div className="container mx-auto p-10 bg-[#F0F3F5]">
+      <div className="filters w-full flex pb-5 gap-4">
+        <div className="p-2 bg-white rounded-md">Fast</div>
+        <div className="p-2 bg-white rounded-md">Speed</div>
+        <div className="p-2 bg-white rounded-md">Mangalore</div>
+        <div className="p-2 bg-white rounded-md">Driver friendly</div>
+        <div className="p-2 bg-white rounded-md">Round trip</div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {carData.map((car, index) => (
-          <div key={index} className="border border-gray-200 rounded-lg overflow-hidden shadow-md">
+          <div key={index} className="border border-gray-200 rounded-lg bg-white overflow-hidden shadow-md">
             <img
               className="w-full h-56 object-cover rounded-t-lg"
               src={`http://localhost:3000/images/${car.car_image}`}
@@ -33,7 +39,7 @@ export default function CarList() {
               <p className="text-gray-600 mb-2">Color: {car.color}</p>
               <p className="text-gray-600 mb-2">Type: {car.c_type}</p>
               <p className="text-gray-600 mb-4">Capacity: {car.capacity}</p>
-              <Link to={`/carlist/${car.car_id}`}>
+              <Link to={`/carlist/${car.model}`}>
                 <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
                   Book
                 </button>

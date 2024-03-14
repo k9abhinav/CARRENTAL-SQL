@@ -75,7 +75,7 @@ const handleUpdate = () => {
       })
       .then((err) => console.log(err));
 
-    });
+    },[image,phone,auth,email,name]);
 
   const handleLogout = () => {
     axios

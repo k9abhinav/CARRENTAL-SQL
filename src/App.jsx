@@ -21,10 +21,26 @@ import AdminCarAdd from "./Components/AdminCar/AdminCarAdd";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Components/Login/Login";
 import Register from "./Components/Login/Register";
-
+import Footer from "./Components/Footer/Footer";
+import React, {  useState,useEffect } from "react";
+import axios from "axios";
 const App = () => {
-  
-  
+  const [auth, setauth] = useState(false);
+  axios.defaults.withCredentials = true;
+
+  useEffect(() => {
+    axios.get("http://localhost:3000")
+   .then((res) => {
+    if (res.data.Status === "Success") {
+      setauth(true);
+    } else {
+      setauth(false);
+    }
+  })
+  .then((err) => console.log(err));
+
+  },[auth]);
+
   // eslint-disable-next-line no-unused-vars
   const scroll = new LocomotiveScroll();
   return (
@@ -34,7 +50,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/carlist" element={<CarList />} />
-          <Route path="/dash" element={<Dashboard />} />
+          <Route path="/dash" element={auth ? <Dashboard /> : <Login />} />
           <Route path="/carlist/:car_id/proceed" element={<Form />} />
           <Route path="/carlist/:car_id" element={<CarDetail />} />
           <Route path="/myaccount" element={<Myaccount />} />
@@ -53,9 +69,11 @@ const App = () => {
           <Route path="/convertible" element={<Convertible/>} />
           <Route path="/sedan" element={<Sedancars/>} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </div>
   );
 };
 
 export default App;
+
