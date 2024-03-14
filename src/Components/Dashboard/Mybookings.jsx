@@ -181,9 +181,9 @@ useEffect(() => {
           <h1 className="font-regular text-2xl">My bookings</h1>
         </div>
 
-        <div className="main-book w-full flex  p-5 flex-col">
+        <div className="main-book w-full flex gap-5 p-5 flex-col">
           {allordercar.map((bookedcar,index)=>(
-            <div key={index} className="allorders bg-slate-600">
+            <div key={index} className="allorders bg-zinc-200 p-2 rounded">
             <div className="w-full text-xl">
               <h1>Model :{bookedcar.model}</h1>
               <h1>Car No :{bookedcar.cno}</h1>

@@ -22,6 +22,7 @@ function Form() {
     calculateFare();
   }, [selectedDelivery, fromDate, toDate]);
   
+  // eslint-disable-next-line react/prop-types
   function DeliveryOptions({ onDeliverySelect }) {
     return (
       <div className="choose flex items-center gap-5 text-black">
