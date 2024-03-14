@@ -195,12 +195,12 @@ function Mybookings() {
           {allordercar.map((bookedcar, index) => (
             <div key={index} className="allorders bg-zinc-200 p-2 rounded w-full">
              <div className="flex items-center w-full justify-evenly">
-             <div className="text-xl">
+             <div className="text-xl font-semibold uppercase">
                 <h1>Model :{bookedcar.model}</h1>
-                <h1>Car No :{bookedcar.cno}</h1>
+                <h1 className="text-blue-500">Car No :{bookedcar.cno}</h1>
               </div>
               <div className="car-img">
-            <img src={`http://localhost:3000/images/`+bookedcar.car_image} alt="CARIMAGE" className="w-56 h-auto" />
+            <img src={`http://localhost:3000/images/`+bookedcar.car_image} alt="CARIMAGE" className="w-56 h-auto rounded-lg" />
               </div>
              </div>
               <div className="flex gap-4 w-full p-4 items-center">
