@@ -74,50 +74,65 @@ function Mybookings() {
   const handleEditClick = () => {
     document.querySelector('.uploadimage input[type="file"]').click();
   };
-const [allordercar, setallordercar] = useState([])
-useEffect(() => {
-  axios
-  .get("http://localhost:3000/users_order")
-  .then((res) => {
-      if (res.data.Status === "Success") {
-        setallordercar(res.data.userData)
-        console.log(allordercar);
-        // setcarNumber(res.data.userData.cno);
-        // setcarcolor(res.data.userData.color);
-        // setcar_enddate(res.data.userData.e_date);
-        // setcar_startdate(res.data.userData.s_date);
-        // setcarcapacity(res.data.userData.capacity);
-        // setcarcategory(res.data.userData.category_name);
-        // setcarmodel(res.data.userData.model);
-        // setcartype(res.data.userData.c_type);
-        // setcar_dtype(res.data.userData.d_type);
-        // setorder_id(res.data.userData.order_id);
-      } else {
-        console.log("ERROR");
-      }
-    })
-  .then((err) => console.log(err));
-},[]);
+  const [allordercar, setallordercar] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/users_order")
+      .then((res) => {
+        if (res.data.Status === "Success") {
+          setallordercar(res.data.userData);
+          console.log(allordercar);
+          // setcarNumber(res.data.userData.cno);
+          // setcarcolor(res.data.userData.color);
+          // setcar_enddate(res.data.userData.e_date);
+          // setcar_startdate(res.data.userData.s_date);
+          // setcarcapacity(res.data.userData.capacity);
+          // setcarcategory(res.data.userData.category_name);
+          // setcarmodel(res.data.userData.model);
+          // setcartype(res.data.userData.c_type);
+          // setcar_dtype(res.data.userData.d_type);
+          // setorder_id(res.data.userData.order_id);
+        } else {
+          console.log("ERROR");
+        }
+      })
+      .then((err) => console.log(err));
+  }, []);
 
-// const startdate = new Date(car_startdate);
-// const enddate = new Date(car_enddate);
+  function formatDate(date) {
+    let newdate = new Date(date);
 
-// function formatDate(date) {
-//   const day = String(date.getDate()).padStart(2, '0');
-//   const month = String(date.getMonth() + 1).padStart(2, '0'); 
-//   const year = date.getFullYear(); 
+    const day = String(newdate.getDate()).padStart(2, "0");
+    const month = String(newdate.getMonth() + 1).padStart(2, "0");
+    const year = newdate.getFullYear();
 
-//   const hours = String(date.getHours()).padStart(2, '0');
-//   const minutes = String(date.getMinutes()).padStart(2, '0');
+    const formattedDate = `${day}-${month}-${year}`;
 
-//   const formattedDate = `${day}-${month}-${year}`;
-//   const formattedTime = `${hours}:${minutes}`;
+    return formattedDate;
+  }
 
-//   return { date: formattedDate, time: formattedTime };
-// }
+  function formatTime(date) {
+    let newdate = new Date(date);
 
-// const formattedDateStart = formatDate(startdate);
-// const formattedDateEnd = formatDate(enddate);
+    const hours = String(newdate.getHours()).padStart(2, "0");
+    const minutes = String(newdate.getMinutes()).padStart(2, "0");
+    
+    const formattedTime = `${hours}:${minutes}`;
+
+    return formattedTime;
+  }
+
+  const handleCancelOrder = (orderId) => {
+    // Send a request to your backend to cancel the order
+    axios
+      .post(`http://localhost:3000/cancel_order/${orderId}`)
+      .then((res) => {
+        console.log("Order cancelled successfully");
+      })
+      .catch((err) => {
+        console.error("Error cancelling order:", err);
+      });
+  };
 
   return (
     <div className="dashboard bg-zinc-200 w-full min-h-screen px-10 py-5 flex gap-5">
@@ -182,28 +197,37 @@ useEffect(() => {
         </div>
 
         <div className="main-book w-full flex gap-5 p-5 flex-col">
-          {allordercar.map((bookedcar,index)=>(
+          {allordercar.map((bookedcar, index) => (
             <div key={index} className="allorders bg-zinc-200 p-2 rounded">
-            <div className="w-full text-xl">
-              <h1>Model :{bookedcar.model}</h1>
-              <h1>Car No :{bookedcar.cno}</h1>
-            </div>
-            <div className="flex gap-4 w-full p-4 items-center">
-              {/* <h1>From Date: {formattedDateStart.date} Time : {formattedDateStart.time}</h1>
-              <h1>To Date: {formattedDateEnd.date} Time : {formattedDateEnd.time}</h1> */}
-              <h1>Order ID: {bookedcar.order_id} </h1>
-              <h1>Color: {bookedcar.color} </h1>
-              <h1>Capacity (seating) : {bookedcar.capacity} </h1>
-              <h1>Type : {bookedcar.c_type}</h1>
-              <h1>Category : {bookedcar.category_name}</h1>
-              <h1>Pickup type :{bookedcar.d_type}</h1>
-              <button className="cancelbtn p-2 rounded-md bg-red-500 text-white">
-                CANCEL
-              </button>
-              <button className="cancelbtn p-2 rounded-md bg-green-500 text-white">
-                Edit
-              </button>
-            </div>
+              <div className="w-full text-xl">
+                <h1>Model :{bookedcar.model}</h1>
+                <h1>Car No :{bookedcar.cno}</h1>
+              </div>
+              <div className="flex gap-4 w-full p-4 items-center">
+                <h1>
+                  From Date: {formatDate(bookedcar.s_date)} Time :{" "}
+                  {formatTime(bookedcar.s_date)}
+                </h1>
+                <h1>
+                  To Date: {formatDate(bookedcar.e_date)} Time :{" "}
+                  {formatTime(bookedcar.e_date)}
+                </h1>
+                <h1>Order ID: {bookedcar.order_id} </h1>
+                <h1>Color: {bookedcar.color} </h1>
+                <h1>Capacity (seating) : {bookedcar.capacity} </h1>
+                <h1>Type : {bookedcar.c_type}</h1>
+                <h1>Category : {bookedcar.category_name}</h1>
+                <h1>Pickup type :{bookedcar.d_type}</h1>
+                <button
+                  className="cancelbtn p-2 rounded-md bg-red-500 text-white"
+                  onClick={handleCancelOrder}
+                >
+                  CANCEL
+                </button>
+                <button className="cancelbtn p-2 rounded-md bg-green-500 text-white">
+                  Edit
+                </button>
+              </div>
             </div>
           ))}
         </div>

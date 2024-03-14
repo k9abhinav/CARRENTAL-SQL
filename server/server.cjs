@@ -340,15 +340,9 @@ app.get("/see", (req, res) => {
       res.json(data);
     }
   });
-  // const userid = req.user_id; // contains the user's ID
-  // console.log(userid);
 });
 
-
-
-// app.get("/", verifyUser , (req, res) => {
-//   return res.json({ Status:"Success",name:req.name})
-// });
+app.post("/cancel_orders")
 
 app.get("/", verifyUser, (req, res) => {
   const token = req.cookies.token;
