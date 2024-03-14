@@ -39,7 +39,7 @@ export default function CarList() {
               <p className="text-gray-600 mb-2">Color: {car.color}</p>
               <p className="text-gray-600 mb-2">Type: {car.c_type}</p>
               <p className="text-gray-600 mb-4">Capacity: {car.capacity}</p>
-              <Link to={`/carlist/${car.model}`}>
+              <Link to={`/carlist/${car.car_id}`}>
                 <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
                   Book
                 </button>

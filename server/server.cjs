@@ -19,24 +19,24 @@ app.use(cors(
 }
 ));
 app.use(cookieParser());
-app.use(express.static("C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server"))
-// app.use(express.static('C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\car-admin\\server'));
+// app.use(express.static("C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server"))
+app.use(express.static('C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server'));
 
-
-const db = mysql.createConnection({
-  host: process.env.Host,
-  user: process.env.User,
-  password: process.env.Password,
-  port: process.env.Port,
-  database: process.env.Database,
-});
 
 // const db = mysql.createConnection({
-//   host: '127.0.0.1',
-//   user: 'root',
-//   password: 'lavu@sql1000',
-//   database: 'car'
+//   host: process.env.Host,
+//   user: process.env.User,
+//   password: process.env.Password,
+//   port: process.env.Port,
+//   database: process.env.Database,
 // });
+
+const db = mysql.createConnection({
+  host: '127.0.0.1',
+  user: 'root',
+  password: 'lavu@sql1000',
+  database: 'car'
+});
 
 
 db.connect(err => {
@@ -50,7 +50,8 @@ db.connect(err => {
 
 const storage = multer.diskStorage({
   destination: (req,file,cb)=>{
-    cb(null,"C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images")
+    // cb(null,"C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images")
+    cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
   },
   filename: (req,file,cb)=>{
     cb(null,file.fieldname + "_" +Date.now()+ path.extname(file.originalname))
@@ -69,8 +70,8 @@ const upload = multer({
 
 const storage1 = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null,"C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images")
-    // cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\car-admin\\server\\images")
+    // cb(null,"C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images")
+    cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
   },
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '_' + Date.now() + path.extname(file.originalname));   //filedname will get the image name we chose and extname will get the extension of that image
@@ -293,7 +294,7 @@ const verifyUser = (req, res, next) => {
     // console.log("No token means no logged in user");
     return res.json({ Error: "Invalid token" });
   } else {
-    jwt.verify(token, process.env.token_secret, (err, decoded) => {
+    jwt.verify(token, "hehe", (err, decoded) => {
       if (err) {
         return res.json({ Error: err });
       } else {
@@ -314,7 +315,7 @@ app.get("/", verifyUser , (req, res) => {
     return res.json({ Error: "Invalid token" });
   }
   else{
-    jwt.verify(token, process.env.token_secret, (err, decoded) => {
+    jwt.verify(token, "hehe", (err, decoded) => {
       if(err){
         return res.json({ Error : err });
       }
@@ -396,7 +397,7 @@ app.post("/login", (req, res) => {
     const details = {
       user_id: user.user_id
     };
-    const token = jwt.sign(details, process.env.token_secret )
+    const token = jwt.sign(details, "hehe" )
     res.cookie('token', token)
     return res.json({ Status: "Success" });
   });

@@ -107,7 +107,7 @@ function CarDetail() {
         </div>
 
         <div className="flex gap-20 my-5 text-white">
-          <Link to={`/carlist/${car.model}/proceed`}>
+          <Link to={`/carlist/${car.car_id}/proceed`}>
             <button className="border-[1px] border-zinc-800 bg-red-500 p-2 rounded-md">
               Proceed to rent
             </button>

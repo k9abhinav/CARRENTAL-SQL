@@ -85,13 +85,13 @@ function Form() {
      
   }
   
-  const { model } = useParams();
+  const { car_id } = useParams();
   // console.log(model)
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/viewcars?model=${model}`)
+    axios.get(`http://localhost:3000/viewcars?car_id=${car_id}`)
       .then(res => {
-        const selectedModel=res.data.find((car) => car.model === model)
+        const selectedModel=res.data.find((car) => car.car_id == car_id)
         setCar(selectedModel)
         setValues({ ...values, car_id: selectedModel.car_id })
       })
