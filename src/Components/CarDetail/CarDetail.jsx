@@ -1,43 +1,63 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import axios from 'axios';
-import { MdOutlineStar, MdOutlineStarBorder, MdOutlineStarHalf } from "react-icons/md";
+import axios from "axios";
+import {
+  MdOutlineStar,
+  MdOutlineStarBorder,
+  MdOutlineStarHalf,
+} from "react-icons/md";
 
 function CarDetail() {
-    const [car, setCar] = useState([]);
-    const [reviews, setReviews] = useState([]);
+  const [car, setCar] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const { car_id } = useParams();
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/viewcars?car_id=${car_id}`)
+    axios
+      .get(`http://localhost:3000/viewcars?car_id=${car_id}`)
       .then((res) => {
-        const selectedCar = res.data.find((car) => car.car_id == car_id)
-          setCar(selectedCar);
-          axios.get(`http://localhost:3000/reviews/${car_id}`)
-    .then((res) => {
-      const reviews = res.data;
-      console.log(reviews); // Verify the structure of the response
-
-      // Assuming you have a state variable to store reviews
-        reviews.forEach((review) => {
-         setReviews(review.car_id==car_id?car_id:"")
-     })
-    })
-    .catch((err) => console.log(err));
+        const selectedCar = res.data.find((car) => car.car_id == car_id);
+        setCar(selectedCar);
+        axios
+          .get(`http://localhost:3000/reviews/${car_id}`)
+          .then((res) => {
+            const reviewsObject = res.data;
+            const allReviews = reviewsObject.map((review) =>
+              review.car_id == car_id ? review : ""
+            );
+            setReviews(allReviews[0]);
+          })
+          .catch((err) => console.log(err));
       })
-        
       .catch((err) => console.log(err));
   }, [car_id]);
 
-  const stars = 0;
-  const ratings = Array.from({ length: 5 }, (elem, index) => {
-    let number = index + 0.5;
+  const overall = reviews.overall_stars
+  const renderStars = (rating) => {
+    const filledStars = [];
+    const emptyStars = [];
+
+    for (let i = 0; i < Math.floor(rating); i++) {
+      filledStars.push(<MdOutlineStar fill={"#ffe234"} key={`full_${i}` } />);
+    }
+    // This condition checks if there is a fractional part remaining after removing the integer part from rating. If the fractional part is greater than or equal to 0.5, it means we need to add a half star.
+    if (rating - Math.floor(rating) >= 0.5) {
+      filledStars.push(<MdOutlineStarHalf fill={"#ffe234"} key="half"/>);
+    }
+
+    for (let i = Math.ceil(rating); i < 5; i++) {
+      emptyStars.push(<MdOutlineStarBorder fill={"#ffe234"} key={`empty${i}` }/>);
+    }
+
     return (
-      <span key={index}>
-        {stars >= index + 1 ? <MdOutlineStar /> : stars >= number ? <MdOutlineStarHalf /> : <MdOutlineStarBorder />}
-      </span>
-    )
-  });
+      <div className="flex items-center">
+        {filledStars}
+        {emptyStars}
+      </div>
+    );
+  };
+
+  
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center py-5 font-['Neue_Montreal']">
@@ -63,34 +83,33 @@ function CarDetail() {
         <div className="ratings bg-zinc-100 flex flex-col my-2">
           <h1 className="text-lg font-semibold">Ratings</h1>
           <div className="flex items-center gap-2 my-2">
-            {ratings}
             <h2 className="text-sm">4.2/4.5</h2>
+            {renderStars(overall)}
           </div>
           <hr className="border-[0.5px] border-zinc-200" />
           <div className="rating flex text-sm my-2">
             <div className="p-2 rating-headings">
-              {[
-                "Value for money",
-                "Pickup & Dropoff experience",
-                "Cleanliness",
-                "Drivability"
-              ].map((data) => {
-                return <div key={data}>{data}</div>;
-              })}
+              {Object.keys(reviews).map((reviewKey, index) => (
+                <div key={index}>
+                  {/* Exclude review_id and car_id fields */}
+                  {!(reviewKey === "review_id" || reviewKey === "car_id" || reviewKey==="overall_stars") && (
+                    <div className="flex items-center w-full justify-center gap-5">
+                      <div className=" w-full  px-2">
+                        <p className="text-[16px]">{reviewKey}</p>
+                      </div>
+                      <div className="flex text-lg items-center">
+                        {renderStars(reviews[reviewKey])}
+                      </div>
+                      <div className="flex "> <p>{reviews[reviewKey]}</p></div>
+
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-            <div className="p-2 rating-stars">
-              {["4.2", "4.5", "3.9", "4.1", "4.0"].map((rate) => {
-                return (
-                  <div className="flex items-center gap-2" key={rate}>
-                    <h1 className="w-[1.5vw]">{rate}</h1>
-                    <h1 className="flex gap-0.4">{ratings}</h1>
-                  </div>
-                );
-              })}
-            </div>
+            <div className="p-2 rating-stars"></div>
           </div>
         </div>
-
         <h1 className="text-lg my-2 font-semibold">About the car</h1>
         <hr className="border-[0.5px] border-zinc-200 my-2" />
         <div className="w-1/2 flex gap-7 flex-wrap">
@@ -102,10 +121,13 @@ function CarDetail() {
             "Voice control",
             "Panoramic Sunroof",
           ].map((about) => {
-            return <div key={about} className="text-sm flex">{about}</div>;
+            return (
+              <div key={about} className="text-sm flex">
+                {about}
+              </div>
+            );
           })}
         </div>
-
         <div className="flex gap-20 my-5 text-white">
           <Link to={`/carlist/${car.car_id}/proceed`}>
             <button className="border-[1px] border-zinc-800 bg-red-500 p-2 rounded-md">

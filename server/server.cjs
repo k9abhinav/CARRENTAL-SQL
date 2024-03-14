@@ -153,15 +153,15 @@ app.get("/reviews/:car_id", (req, res) => {
   const car_id = req.params.car_id;
   console.log("Received car_id:", car_id);
 
-  const sql = "SELECT * FROM reviews R JOIN orders O ON R.order_id = O.order_id WHERE O.car_id = ?";
-  
+  // const sql = "SELECT * FROM reviews R JOIN orders O ON R.order_id = O.order_id WHERE O.car_id = ?";
+  const sql='SELECT * FROM reviews WHERE car_id=?'
   db.query(sql, [car_id], (err, reviews) => {
     if (err) {
       console.error("Error fetching reviews:", err);
       return res.status(500).json({ error: "Internal server error" });
     }
     
-    console.log("Retrieved reviews:", reviews);
+    // console.log("Retrieved reviews:", reviews);
     // Send the reviews as a response
     return res.json(reviews);
   });
@@ -448,7 +448,7 @@ app.get('/users_order', verifyUser,(req, res) => {
     return res.json({ Error: "Invalid token" });
   }
   else{
-    jwt.verify(token, process.env.token_secret, (err, decoded) => {
+    jwt.verify(token, "hehe", (err, decoded) => {
       if(err){
         return res.json({ Error : err });
       }
