@@ -26,15 +26,7 @@ app.use(
     "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server"
   )
 );
-// app.use(express.static('C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server'));
-
-const db = mysql.createConnection({
-  host: process.env.Host,
-  user: process.env.User,
-  password: process.env.Password,
-  port: process.env.Port,
-  database: process.env.Database,
-});
+app.use(express.static('C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server'));
 
 // const db = mysql.createConnection({
 //   host: process.env.Host,
@@ -43,6 +35,8 @@ const db = mysql.createConnection({
 //   port: process.env.Port,
 //   database: process.env.Database,
 // });
+
+// 
 
 const db = mysql.createConnection({
   host: '127.0.0.1',
@@ -193,6 +187,14 @@ app.post("/addcar", upload1.single("car_image"), (req, res) => {
     return res.status(200).json({ message: "Car updated successfully" });
   });
 });
+
+app.get("/reviews", (req, res) => {
+  const sql = 'SELECT * FROM reviews'
+  db.query(sql, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data)
+  })
+})
 
 app.get("/reviews/:car_id", (req, res) => {
   const car_id = req.params.car_id;
