@@ -44,12 +44,12 @@ const db = mysql.createConnection({
 //   database: process.env.Database,
 // });
 
-const db = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'root',
-  password: 'lavu@sql1000',
-  database: 'car'
-});
+// const db = mysql.createConnection({
+//   host: '127.0.0.1',
+//   user: 'root',
+//   password: 'lavu@sql1000',
+//   database: 'car'
+// });
 
 db.connect((err) => {
   if (err) {
