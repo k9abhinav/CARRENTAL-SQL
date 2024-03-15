@@ -24,6 +24,7 @@ import Register from "./Components/Login/Register";
 import Footer from "./Components/Footer/Footer";
 import React, {  useState,useEffect } from "react";
 import axios from "axios";
+
 const App = () => {
   const [auth, setauth] = useState(false);
   axios.defaults.withCredentials = true;
@@ -69,6 +70,7 @@ const App = () => {
           <Route path="/convertible" element={<Convertible/>} />
           <Route path="/sedan" element={<Sedancars/>} />
         </Routes>
+        
         <Footer />
       </BrowserRouter>
     </div>
