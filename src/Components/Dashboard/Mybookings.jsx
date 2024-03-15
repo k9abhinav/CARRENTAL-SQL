@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import axios from "axios";
-
+import { FaCarOn } from "react-icons/fa6";
 function Mybookings() {
   const [auth, setauth] = useState(false);
   const [message, setmessage] = useState("");
@@ -139,7 +139,6 @@ const handleFeedback = (car_id) => {
   .then((res) => {
     console.log("Server response:", res.data);
     console.log("Order cancelled successfully");
-    window.location.reload();
   })
   .catch((err) => {
     console.error("Error cancelling order:", err);
@@ -157,12 +156,7 @@ const handleFeedback = (car_id) => {
               onChange={handleFile}
               className="hidden"
             />
-            <button
-              className="profilepic rounded bg-slate-100 p-1"
-              onClick={handleUpload}
-            >
-              Upload image
-            </button>
+           
           </div>
           <div className="relative px-3">
             <div className="profile-img relative  overflow-hidden">
@@ -175,14 +169,20 @@ const handleFeedback = (car_id) => {
             <MdEdit
               className="absolute -right-1 bottom-0 w-6 h-6 rounded text-black cursor-pointer "
               onClick={handleEditClick}
-            />
+            /> EDIT
           </div>
           {auth ? (
             <div className="profile-name flex flex-col items-center py-4 ">
+               <button
+              className="profilepic rounded bg-slate-600 text-white font-semibold p-1"
+              onClick={handleUpload}
+            >
+              Upload image
+            </button>
               <h1 className="capitalize font-semibold ">{name}</h1>
               <h4 className="text-zinc-700 font-light text-xs">{phone}</h4>
               <h4 className="text-zinc-700 font-light text-xs">{email}</h4>
-              <button onClick={handleLogout}>Logout</button>
+              <button onClick={handleLogout} className="px-2 py-1 font-semibold bg-red-300 rounded-md">Logout</button>
             </div>
           ) : (
             <h1 className="">{message} --Pehle Login kar ---</h1>
@@ -249,7 +249,7 @@ const handleFeedback = (car_id) => {
         )}
 <div className="feedbackbtn py-5">
   
-{feedbackShow(bookedcar.e_date) === true ? (<button onClick={handleFeedback(bookedcar.order_id)} className="p-3 rounded-md bg-green-500 text-white">Review your experience </button>) : null}
+{feedbackShow(bookedcar.e_date) === true ? (<button onClick={handleFeedback(bookedcar.order_id)} className="p-3 rounded-md bg-green-500 text-white">Review your experience </button>) : <div className="p-2 flex gap-5 items-center bg-green-100"><FaCarOn size={32} /> -----------ACTIVE BOOKING-----------</div> }
 </div>
             </div>
             
