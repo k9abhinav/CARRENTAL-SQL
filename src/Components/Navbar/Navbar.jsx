@@ -12,6 +12,7 @@ const Navbar = () => {
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
+  axios.defaults.withCredentials = true;
     axios.get("http://localhost:3000")
    .then((res) => {
     if (res.data.Status === "Success") {

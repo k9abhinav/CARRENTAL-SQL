@@ -27,11 +27,12 @@ function Login() {
         <div className="w-full min-h-screen flex items-center justify-center">
             <div className="w-[30vw] p-4 border rounded-lg bg-gray-100 ">
             <h2 className="text-center">Login</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} >
                 <div>
                     <label className="block mb-2">Email:</label>
                     <input
                         type="text"
+                        name="email"
                         className="w-full p-2 border rounded"
                         onChange={e => setValues({ ...values, email: e.target.value })}
                         required
@@ -41,6 +42,7 @@ function Login() {
                     <label className="block mb-2">Password:</label>
                     <input
                         type="password"
+                        name="password"
                         className="w-full p-2 border rounded"
                         onChange={e => setValues({ ...values, password: e.target.value })}
                         required

@@ -1,8 +1,10 @@
+/* eslint-disable react/jsx-key */
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import axios from "axios";
 import { FaCarOn } from "react-icons/fa6";
+import { FaStar } from "react-icons/fa";
 function Mybookings() {
   const [auth, setauth] = useState(false);
   const [message, setmessage] = useState("");
@@ -12,6 +14,15 @@ function Mybookings() {
   const [image, setimage] = useState();
   axios.defaults.withCredentials = true;
   const [file, setfile] = useState();
+
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
+  const [feedbackValues, setfeedbackValues] = useState({
+    value_for_money: 0,
+    pickup_dropoff_experience: 0,
+    cleanliness: 0,
+    drivability: 0,
+  });
+  console.log(feedbackValues);
 
   const handleFile = (e) => {
     setfile(e.target.files[0]);
@@ -100,8 +111,6 @@ function Mybookings() {
     return formattedTime;
   }
 
- 
-
   const handleCancelOrder = (orderId) => {
     // Send a request to your backend to cancel the order
     axios
@@ -119,32 +128,32 @@ function Mybookings() {
   const cancellationPolicy = (startdate) => {
     const presentDate = new Date();
     const bookingStartDate = new Date(startdate);
-  
+
     const timeDifference = bookingStartDate.getTime() - presentDate.getTime();
-  
+
     const hoursDifference = timeDifference / (1000 * 60 * 60);
-  
+
     return hoursDifference >= -6 && bookingStartDate > presentDate;
   };
-  
+
   const feedbackShow = (endDateandTime) => {
     const endDate = new Date(endDateandTime);
     const presentDate = new Date();
     return endDate.getTime() > presentDate.getTime(); // Compare timestamps
-};
+  };
 
-const handleFeedback = (car_id) => {
-  axios
-  .post(`http://localhost:3000/review_o/${car_id}`)
+  const handleFeedbackDisplay = () => {
+    setShowFeedbackForm(!showFeedbackForm);
+  };
+const feedbackUpload = (car_id) => {
+  axios.post(`http://localhost:3000/review-car/${car_id}`,feedbackValues)
   .then((res) => {
-    console.log("Server response:", res.data);
-    console.log("Order cancelled successfully");
-  })
-  .catch((err) => {
-    console.error("Error cancelling order:", err);
-  });
-};
+      console.log(res);
+      console.log("Upload FEEDBACK done");
+    })
+  .catch((err) =>{console.log(err)});
 
+};
   return (
     <div className="dashboard bg-zinc-200 w-full min-h-screen px-10 py-5 flex gap-5">
       <div className="left-dash min-w-[18vw] bg-zinc-50 py-10 rounded-md">
@@ -156,7 +165,6 @@ const handleFeedback = (car_id) => {
               onChange={handleFile}
               className="hidden"
             />
-           
           </div>
           <div className="relative px-3">
             <div className="profile-img relative  overflow-hidden">
@@ -169,20 +177,26 @@ const handleFeedback = (car_id) => {
             <MdEdit
               className="absolute -right-1 bottom-0 w-6 h-6 rounded text-black cursor-pointer "
               onClick={handleEditClick}
-            /> EDIT
+            />{" "}
+            EDIT
           </div>
           {auth ? (
             <div className="profile-name flex flex-col items-center py-4 ">
-               <button
-              className="profilepic rounded bg-slate-600 text-white font-semibold p-1"
-              onClick={handleUpload}
-            >
-              Upload image
-            </button>
+              <button
+                className="profilepic rounded bg-slate-600 text-white font-semibold p-1"
+                onClick={handleUpload}
+              >
+                Upload image
+              </button>
               <h1 className="capitalize font-semibold ">{name}</h1>
               <h4 className="text-zinc-700 font-light text-xs">{phone}</h4>
               <h4 className="text-zinc-700 font-light text-xs">{email}</h4>
-              <button onClick={handleLogout} className="px-2 py-1 font-semibold bg-red-300 rounded-md">Logout</button>
+              <button
+                onClick={handleLogout}
+                className="px-2 py-1 font-semibold bg-red-300 rounded-md"
+              >
+                Logout
+              </button>
             </div>
           ) : (
             <h1 className="">{message} --Pehle Login kar ---</h1>
@@ -210,16 +224,23 @@ const handleFeedback = (car_id) => {
 
         <div className="main-book w-full flex gap-5 p-5 flex-col">
           {allordercar.map((bookedcar, index) => (
-            <div key={index} className="allorders bg-zinc-200 p-5 rounded w-full">
-             <div className="flex items-center w-full justify-evenly">
-             <div className="text-xl font-semibold uppercase">
-                <h1>Model :{bookedcar.model}</h1>
-                <h1 className="text-blue-500">Car No :{bookedcar.cno}</h1>
+            <div
+              key={index}
+              className="allorders bg-zinc-200 p-5 rounded w-full"
+            >
+              <div className="flex items-center w-full justify-evenly">
+                <div className="text-xl font-semibold uppercase">
+                  <h1>Model :{bookedcar.model}</h1>
+                  <h1 className="text-blue-500">Car No :{bookedcar.cno}</h1>
+                </div>
+                <div className="car-img">
+                  <img
+                    src={`http://localhost:3000/images/` + bookedcar.car_image}
+                    alt="CARIMAGE"
+                    className="w-56 h-auto rounded-lg"
+                  />
+                </div>
               </div>
-              <div className="car-img">
-            <img src={`http://localhost:3000/images/`+bookedcar.car_image} alt="CARIMAGE" className="w-56 h-auto rounded-lg" />
-              </div>
-             </div>
               <div className="flex gap-4 w-full p-4 items-center">
                 <h1>
                   From Date: {formatDate(bookedcar.s_date)} Time :{" "}
@@ -235,24 +256,150 @@ const handleFeedback = (car_id) => {
                 <h1>Type : {bookedcar.c_type}</h1>
                 <h1>Category : {bookedcar.category_name}</h1>
                 <h1>Pickup type :{bookedcar.d_type}</h1>
-                
               </div>
               {cancellationPolicy(bookedcar.s_date) ? (
-          <button
-            className="cancelbtn p-2 rounded-md bg-red-500 text-white"
-            onClick={() => handleCancelOrder(bookedcar.order_id)}
-          >
-            CANCEL ORDER
-          </button>
-        ) : (
-          <div className="nocancel p-2">Cancellation not possible only possible 6 hours early</div>
-        )}
-<div className="feedbackbtn py-5">
-  
-{feedbackShow(bookedcar.e_date) === true ? (<button onClick={handleFeedback(bookedcar.order_id)} className="p-3 rounded-md bg-green-500 text-white">Review your experience </button>) : <div className="p-2 flex gap-5 items-center bg-green-100"><FaCarOn size={32} /> -----------ACTIVE BOOKING-----------</div> }
-</div>
+                <button
+                  className="cancelbtn p-2 rounded-md bg-red-500 text-white"
+                  onClick={() => handleCancelOrder(bookedcar.order_id)}
+                >
+                  CANCEL ORDER
+                </button>
+              ) : (
+                <div className="nocancel p-2">
+                  Cancellation not possible only possible 6 hours early
+                </div>
+              )}
+              <div className="feedbackbtn py-5">
+                {feedbackShow(bookedcar.e_date) === true ? (
+                  <button
+                    onClick={handleFeedbackDisplay}
+                    className="p-3 rounded-md bg-green-500 text-white"
+                  >
+                    Review your experience{" "}
+                  </button>
+                  
+                ) : (
+                  <div className="p-2 flex gap-5 items-center bg-green-100">
+                    <FaCarOn size={32} /> -----------ACTIVE BOOKING-----------
+                  </div>
+                )}
+              </div>
+
+              {feedbackShow(bookedcar.e_date) && showFeedbackForm && (<div className="feedback-hide">
+                <div className="feedback-form flex flex-col  bg-white text-black font-semibold p-3 rounded">
+                  <h1 className="text-xl pb-4 text-center">FEEDBACK FORM</h1>
+                  <div className="flex items-center">
+                    Value for Money -{" "}
+                    {[...Array(5)].map((star, i) => {
+                      const ratingValue = i + 1;
+                      return (
+                        <label className="flex ">
+                          <input
+                            type="radio"
+                            className="hidden"
+                            name="rating"
+                            value={ratingValue}
+                            onClick={() =>
+                              setfeedbackValues({
+                                ...feedbackValues,
+                                value_for_money: ratingValue,
+                              })
+                            }
+                          />
+                          <FaStar
+                            className="star-icon cursor-pointer mr-2"
+                            size={20}
+                            color={ratingValue <= feedbackValues.value_for_money ? "#ffc107" : "#e4e5e9"}
+                          />
+                        </label>
+                      );
+                    })}
+                  </div>
+                  <div className="flex items-center">
+                    pickup dropoff experience -{" "}
+                    {[...Array(5)].map((star, i) => {
+                      const ratingValue = i + 1;
+                      return (
+                        <label className="flex ">
+                          <input
+                            type="radio"
+                            className="hidden"
+                            name="rating"
+                            value={ratingValue}
+                            onClick={() =>
+                              setfeedbackValues({
+                                ...feedbackValues,
+                                pickup_dropoff_experience: ratingValue,
+                              })
+                            }
+                          />
+                          <FaStar
+                            className="star-icon cursor-pointer mr-2"
+                            size={20}
+                            color={ratingValue <= feedbackValues.pickup_dropoff_experience ? "#ffc107" : "#e4e5e9"}
+                          />
+                        </label>
+                      );
+                    })}
+                  </div>
+                  <div className="flex items-center">
+                    cleanliness -{" "}
+                    {[...Array(5)].map((star, i) => {
+                      const ratingValue = i + 1;
+                      return (
+                        <label className="flex ">
+                          <input
+                            type="radio"
+                            className="hidden"
+                            name="rating"
+                            value={ratingValue}
+                            onClick={() =>
+                              setfeedbackValues({
+                                ...feedbackValues,
+                                cleanliness: ratingValue,
+                              })
+                            }
+                          />
+                          <FaStar
+                            className="star-icon cursor-pointer mr-2"
+                            size={20}
+                            color={ratingValue <= feedbackValues.cleanliness ? "#ffc107" : "#e4e5e9"}
+                          />  
+                        </label>
+                      );
+                    })}
+                  </div>
+                  <div className="flex items-center">
+                    drivability -{" "}
+                    {[...Array(5)].map((star, i) => {
+                      const ratingValue = i + 1;
+                      return (
+                        <label className="flex ">
+                          <input
+                            type="radio"
+                            className="hidden"
+                            name="rating"
+                            value={ratingValue}
+                            onClick={() =>
+                              setfeedbackValues({
+                                ...feedbackValues,
+                                drivability: ratingValue,
+                              })
+                            }
+                          />
+                          <FaStar
+                            className="star-icon cursor-pointer mr-2"
+                            size={20}
+                            color={ratingValue <= feedbackValues.drivability ? "#ffc107" : "#e4e5e9"}
+                          />
+                        </label>
+                      );
+                    })}
+                  </div>
+                  <button type="submit" onSubmit={feedbackUpload(bookedcar.car_id)} className="bg-yellow-300 text-black font-semibold w-fit px-3 py-2 rounded-lg self-center">Submit</button>
+                </div>
+              </div>)}
             </div>
-            
           ))}
         </div>
       </div>

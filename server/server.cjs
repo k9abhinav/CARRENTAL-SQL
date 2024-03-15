@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: ["http://localhost:5173"],
-    methods: ["POST", "GET","DELETE"],
+    methods: ["POST", "GET","DELETE","PUT"],
     credentials: true,
   })
 );
@@ -172,6 +172,60 @@ app.get("/user", (req, res) => {
   //   return res.json(data)
   // })
 });
+
+
+app.post("/review-car/:car_id", async (req, res) => {
+  const car_id = req.params.car_id;
+  const { value_for_money, pickup_dropoff_experience, cleanliness, drivability } = req.body;
+
+  try {
+    await updateReview('value_for_money', value_for_money, car_id);
+    await updateReview('pickup_dropoff_experience', pickup_dropoff_experience, car_id);
+    await updateReview('cleanliness', cleanliness, car_id);
+    await updateReview('drivability', drivability, car_id);
+
+    const overall_stars = (value_for_money + pickup_dropoff_experience + cleanliness + drivability) / 4;
+    await updateOverallStars(overall_stars, car_id);
+
+    console.log("All updates successful");
+    res.status(200).send("Review submitted successfully");
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Internal server error");
+  }
+});
+
+
+async function updateReview(field, value, car_id) {
+  const sql = `UPDATE reviews SET ${field} = ? WHERE car_id = ?`;
+  return new Promise((resolve, reject) => {
+    db.query(sql, [value, car_id], (err) => {
+      if (err) {
+        console.error(`${field} update failed:`, err);
+        reject(err);
+      } else {
+        console.log(`${field} successfully updated`);
+        resolve();
+      }
+    });
+  });
+}
+
+async function updateOverallStars(overall_stars, car_id) {
+  const sql = 'UPDATE reviews SET overall_stars = ? WHERE car_id = ?';
+  return new Promise((resolve, reject) => {
+    db.query(sql, [overall_stars, car_id], (err) => {
+      if (err) {
+        console.error("Overall stars update failed:", err);
+        reject(err);
+      } else {
+        console.log("Overall stars successfully updated");
+        resolve();
+      }
+    });
+  });
+}
+
 
 //insert car
 
@@ -524,7 +578,7 @@ app.get("/users_order", verifyUser, (req, res) => {
       } else {
         const user_id = decoded.user_id; // Get user_id from decoded token
         let sql =
-          "SELECT c.color,c.c_type,c.cno,c.model,c.capacity,c.car_image,cc.category_name,o.order_id,o.s_date,o.e_date,o.d_type FROM orders as o,account as a,car as c,CarCategory as cc WHERE o.user_id = a.user_id and c.car_id = o.car_id and cc.category_id = c.category_id and a.user_id =?";
+          "SELECT c.color,c.c_type,c.cno,c.model,c.capacity,c.car_image,c.car_id,cc.category_name,o.order_id,o.s_date,o.e_date,o.d_type FROM orders as o,account as a,car as c,CarCategory as cc WHERE o.user_id = a.user_id and c.car_id = o.car_id and cc.category_id = c.category_id and a.user_id =?";
         db.query(sql, [user_id], (err, data) => {
           if (err) {
             console.error("Database error:", err);
