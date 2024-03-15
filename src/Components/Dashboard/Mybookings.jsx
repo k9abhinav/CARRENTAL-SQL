@@ -127,7 +127,24 @@ function Mybookings() {
     return hoursDifference >= -6 && bookingStartDate > presentDate;
   };
   
- 
+  const feedbackShow = (endDateandTime) => {
+    const endDate = new Date(endDateandTime);
+    const presentDate = new Date();
+    return endDate.getTime() > presentDate.getTime(); // Compare timestamps
+};
+
+const handleFeedback = (car_id) => {
+  axios
+  .post(`http://localhost:3000/review_o/${car_id}`)
+  .then((res) => {
+    console.log("Server response:", res.data);
+    console.log("Order cancelled successfully");
+    window.location.reload();
+  })
+  .catch((err) => {
+    console.error("Error cancelling order:", err);
+  });
+};
 
   return (
     <div className="dashboard bg-zinc-200 w-full min-h-screen px-10 py-5 flex gap-5">
@@ -193,7 +210,7 @@ function Mybookings() {
 
         <div className="main-book w-full flex gap-5 p-5 flex-col">
           {allordercar.map((bookedcar, index) => (
-            <div key={index} className="allorders bg-zinc-200 p-2 rounded w-full">
+            <div key={index} className="allorders bg-zinc-200 p-5 rounded w-full">
              <div className="flex items-center w-full justify-evenly">
              <div className="text-xl font-semibold uppercase">
                 <h1>Model :{bookedcar.model}</h1>
@@ -228,9 +245,14 @@ function Mybookings() {
             CANCEL ORDER
           </button>
         ) : (
-          <div className="nocancel">Cancellation not possible only possible 6 hours early</div>
+          <div className="nocancel p-2">Cancellation not possible only possible 6 hours early</div>
         )}
+<div className="feedbackbtn py-5">
+  
+{feedbackShow(bookedcar.e_date) === true ? (<button onClick={handleFeedback(bookedcar.order_id)} className="p-3 rounded-md bg-green-500 text-white">Review your experience </button>) : null}
+</div>
             </div>
+            
           ))}
         </div>
       </div>
