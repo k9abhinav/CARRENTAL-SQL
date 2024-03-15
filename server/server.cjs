@@ -19,27 +19,27 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(
-  express.static(
-    "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server"
-  )
-);
-// app.use(express.static('C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server'));
-
-const db = mysql.createConnection({
-  host: process.env.Host,
-  user: process.env.User,
-  password: process.env.Password,
-  port: process.env.Port,
-  database: process.env.Database,
-});
+// app.use(
+//   express.static(
+//     "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server"
+//   )
+// );
+app.use(express.static('C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server'));
 
 // const db = mysql.createConnection({
-//   host: '127.0.0.1',
-//   user: 'root',
-//   password: 'lavu@sql1000',
-//   database: 'car'
+//   host: process.env.Host,
+//   user: process.env.User,
+//   password: process.env.Password,
+//   port: process.env.Port,
+//   database: process.env.Database,
 // });
+
+const db = mysql.createConnection({
+  host: '127.0.0.1',
+  user: 'root',
+  password: 'lavu@sql1000',
+  database: 'car'
+});
 
 db.connect((err) => {
   if (err) {
@@ -71,11 +71,11 @@ const verifyUser = (req, res, next) => {
 // ------------------------------------
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(
-      null,
-      "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
-    );
-    // cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
+    // cb(
+    //   null,
+    //   "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
+    // );
+    cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
   },
   filename: (req, file, cb) => {
     cb(
@@ -96,11 +96,11 @@ const upload = multer({
 
 const storage1 = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(
-      null,
-      "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
-    );
-    // cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
+    // cb(
+    //   null,
+    //   "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
+    // );
+    cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
   },
   filename: (req, file, cb) => {
     cb(
@@ -496,7 +496,7 @@ app.get("/users_order", verifyUser, (req, res) => {
   if (!token) {
     return res.json({ Error: "Invalid token" });
   } else {
-    jwt.verify(token, process.env.token_secret, (err, decoded) => {
+    jwt.verify(token, "hehe", (err, decoded) => {
       if (err) {
         return res.json({ Error: err });
       } else {

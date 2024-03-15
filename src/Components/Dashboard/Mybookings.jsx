@@ -57,7 +57,7 @@ function Mybookings() {
           setmessage(res.data.Error);
         }
       })
-      .then((err) => console.log(err));
+      .catch((err) => console.log(err));
   }, [auth, email, phone, image]);
 
   const handleLogout = () => {

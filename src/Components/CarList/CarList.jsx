@@ -28,22 +28,36 @@ export default function CarList() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {carData.map((car, index) => (
-          <div key={index} className="border border-gray-200 rounded-lg bg-white overflow-hidden shadow-md">
+          <div key={index} className="border border-gray-200 rounded-lg bg-white shadow-md">
             <img
-              className="w-full h-56 object-cover rounded-t-lg"
+              className="w-full h-56 object-cover rounded-t-md"
               src={`http://localhost:3000/images/${car.car_image}`}
               alt={car.model}
             />
             <div className="p-4">
-              <h2 className="font-semibold text-lg mb-2">{car.model}</h2>
-              <p className="text-gray-600 mb-2">Color: {car.color}</p>
-              <p className="text-gray-600 mb-2">Type: {car.c_type}</p>
-              <p className="text-gray-600 mb-4">Capacity: {car.capacity}</p>
-              <Link to={`/carlist/${car.car_id}`}>
+              <div className="para flex gap-2">
+              <p className="text-gray-600">{car.c_type}</p>
+              <p className="text-gray-600">{car.color}</p>
+              <p className="text-gray-600">{car.capacity} seaters</p></div>
+              <h2 className="font-semibold text-lg mb-5">{car.model}</h2>
+              {car.stock > 0 ? (
+              <div className="flex gap-5 items-center">
+                <h2>Available {car.stock} stocks</h2>
+                <Link to={`/carlist/${car.car_id}`}>
                 <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
                   Book
                 </button>
               </Link>
+                </div>
+                ) : (
+                  <div className="flex gap-5 items-center">
+                    <button className="cursor-not-allowed opacity-50 bg-gray-400 hover:bg-gray-400 text-white px-4 py-2 rounded-md">
+                  Book
+                </button>
+                    <h2>Out of stock</h2>
+              
+              </div>
+              )}
             </div>
           </div>
         ))}
