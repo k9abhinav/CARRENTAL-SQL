@@ -12,16 +12,6 @@ function Mybookings() {
   const [image, setimage] = useState();
   axios.defaults.withCredentials = true;
   const [file, setfile] = useState();
-  // const [carNumber, setcarNumber] = useState('');
-  // const [carmodel, setcarmodel] = useState("");
-  // const [carcolor, setcarcolor] = useState("");
-  // const [car_startdate, setcar_startdate] = useState("");
-  // const [car_enddate, setcar_enddate] = useState("");
-  // const [carcategory, setcarcategory] = useState("");
-  // const [cartype, setcartype] = useState("");
-  // const [carcapacity, setcarcapacity] = useState();
-  // const [car_dtype, setcar_dtype] = useState('');
-  // const [order_id, setorder_id] = useState()
 
   const handleFile = (e) => {
     setfile(e.target.files[0]);
@@ -45,10 +35,8 @@ function Mybookings() {
       .then((res) => {
         if (res.data.Status === "Success") {
           setauth(true);
-          // navigate('/login');
           setname(res.data.userData.fullname);
-          console.log(res.data);
-
+          // console.log(res.data);
           setemail(res.data.userData.email);
           setimage(`http://localhost:3000/images/` + res.data.userData.image);
           setphone(res.data.userData.phno);
@@ -81,22 +69,12 @@ function Mybookings() {
       .then((res) => {
         if (res.data.Status === "Success") {
           setallordercar(res.data.userData);
-          console.log(allordercar);
-          // setcarNumber(res.data.userData.cno);
-          // setcarcolor(res.data.userData.color);
-          // setcar_enddate(res.data.userData.e_date);
-          // setcar_startdate(res.data.userData.s_date);
-          // setcarcapacity(res.data.userData.capacity);
-          // setcarcategory(res.data.userData.category_name);
-          // setcarmodel(res.data.userData.model);
-          // setcartype(res.data.userData.c_type);
-          // setcar_dtype(res.data.userData.d_type);
-          // setorder_id(res.data.userData.order_id);
+          console.log("GOt all ordered CARS");
         } else {
           console.log("ERROR");
         }
       })
-      .then((err) => console.log(err));
+      .catch((err) => console.log(err));
   }, []);
 
   function formatDate(date) {
@@ -116,23 +94,40 @@ function Mybookings() {
 
     const hours = String(newdate.getHours()).padStart(2, "0");
     const minutes = String(newdate.getMinutes()).padStart(2, "0");
-    
+
     const formattedTime = `${hours}:${minutes}`;
 
     return formattedTime;
   }
 
+ 
+
   const handleCancelOrder = (orderId) => {
     // Send a request to your backend to cancel the order
     axios
-      .post(`http://localhost:3000/cancel_order/${orderId}`)
+      .delete(`http://localhost:3000/cancel_orders/${orderId}`)
       .then((res) => {
+        console.log("Server response:", res.data);
         console.log("Order cancelled successfully");
+        window.location.reload();
       })
       .catch((err) => {
         console.error("Error cancelling order:", err);
       });
   };
+
+  const cancellationPolicy = (startdate) => {
+    const presentDate = new Date();
+    const bookingStartDate = new Date(startdate);
+  
+    const timeDifference = bookingStartDate.getTime() - presentDate.getTime();
+  
+    const hoursDifference = timeDifference / (1000 * 60 * 60);
+  
+    return hoursDifference >= -6 && bookingStartDate > presentDate;
+  };
+  
+ 
 
   return (
     <div className="dashboard bg-zinc-200 w-full min-h-screen px-10 py-5 flex gap-5">
@@ -198,11 +193,16 @@ function Mybookings() {
 
         <div className="main-book w-full flex gap-5 p-5 flex-col">
           {allordercar.map((bookedcar, index) => (
-            <div key={index} className="allorders bg-zinc-200 p-2 rounded">
-              <div className="w-full text-xl">
+            <div key={index} className="allorders bg-zinc-200 p-2 rounded w-full">
+             <div className="flex items-center w-full justify-evenly">
+             <div className="text-xl font-semibold uppercase">
                 <h1>Model :{bookedcar.model}</h1>
-                <h1>Car No :{bookedcar.cno}</h1>
+                <h1 className="text-blue-500">Car No :{bookedcar.cno}</h1>
               </div>
+              <div className="car-img">
+            <img src={`http://localhost:3000/images/`+bookedcar.car_image} alt="CARIMAGE" className="w-56 h-auto rounded-lg" />
+              </div>
+             </div>
               <div className="flex gap-4 w-full p-4 items-center">
                 <h1>
                   From Date: {formatDate(bookedcar.s_date)} Time :{" "}
@@ -218,16 +218,18 @@ function Mybookings() {
                 <h1>Type : {bookedcar.c_type}</h1>
                 <h1>Category : {bookedcar.category_name}</h1>
                 <h1>Pickup type :{bookedcar.d_type}</h1>
-                <button
-                  className="cancelbtn p-2 rounded-md bg-red-500 text-white"
-                  onClick={handleCancelOrder}
-                >
-                  CANCEL
-                </button>
-                <button className="cancelbtn p-2 rounded-md bg-green-500 text-white">
-                  Edit
-                </button>
+                
               </div>
+              {cancellationPolicy(bookedcar.s_date) ? (
+          <button
+            className="cancelbtn p-2 rounded-md bg-red-500 text-white"
+            onClick={() => handleCancelOrder(bookedcar.order_id)}
+          >
+            CANCEL ORDER
+          </button>
+        ) : (
+          <div className="nocancel">Cancellation not possible only possible 6 hours early</div>
+        )}
             </div>
           ))}
         </div>
