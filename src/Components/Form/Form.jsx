@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios';
+import './Form.css'
 let fareDoor = 350;
 
 
@@ -11,12 +12,14 @@ function Form() {
   const [selectedDelivery, setSelectedDelivery] = useState('self');
   const [isAgreed, setIsAgreed] = useState(false);
   const [car, setCar] = useState();
+  const [message, setMessage] = useState('');
+  const [orderPlaced, setOrderPlaced] = useState(false);
   const [values, setValues] = useState({
     car_id:'',
     startDate: '',
     endDate: '',
     dType:'',
-    fareFee:''
+    fareFee: '',
   });
   useEffect(() => {
     calculateFare();
@@ -102,8 +105,20 @@ function Form() {
   function handleSubmit(e) {
     e.preventDefault();
     axios.post(`http://localhost:3000/rent`, values)
-      .then(res => console.log(res.data))
+      .then(res => {
+        console.log(res.data)
+        console.log(res.data.message);
+        setOrderPlaced(true);
+      })
     .catch(err=>console.log(err))
+  }
+
+  function handlePayment(){
+    const paymentDiv = document.querySelector(".payment");
+    paymentDiv.style.display = "block";
+    const button = document.querySelector(".order-button");
+    // button.disabled = true;
+    
   }
   // console.log("From date:"+fromDate) 
   // console.log("To date:"+toDate)
@@ -143,14 +158,17 @@ function Form() {
         <h1 className='my-1 text-lg font-semibold'>Fare Summary</h1>
         <p className='my-1 text-sm'>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
         <h1 id="fareCost" className='my-1 text-md'>Rs.{fareFee}</h1>
-       <button className='border-[1px] border-zinc-500 p-2 rounded-md bg-violet-500 text-white'
-          disabled={!isAgreed || !fromDate || !toDate}   >Proceed to pay</button>
+       <button className='order-button border-[1px] border-zinc-500 p-2 rounded-md bg-violet-500 text-white'
+          disabled={!isAgreed || !fromDate || !toDate} >Proceed to pay</button>
         
         {/* disabled if user hasn't agreed in the sense the checkbox is unchecked i.e false so !false is true which will make it disabled */}
-      </div>
+        </div>
+        
+        <p>{message}</p>
 
-
       </div>
+      <div className="payment"><p>payment</p></div>
+
       </form>
   )
 }

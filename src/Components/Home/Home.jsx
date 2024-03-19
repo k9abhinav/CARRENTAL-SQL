@@ -1,9 +1,9 @@
 import React from 'react'
 import { useEffect, useState } from "react";
-// import { Link } from 'react-router-dom'
-// import About from "./About";
-// import Team from "./Team";
-// import Terms from "./Terms";
+import About from './About'
+import Team from './Team'
+import Terms from './Terms'
+
 import Hero from "../Hero/Hero";
 import Background from "../Background/Background";
 import Categories from './Categories';
@@ -33,9 +33,9 @@ function Home() {
           playStatus={playStatus}
           />
       <Categories />
-      {/* <About /> */}
-        {/* <Team/> */}
-        {/* <Terms/> */}
+      <About />
+      <Team />
+      <Terms/>
         {/* <div className="LOGIN w-full h-[50vh] flex items-center justify-around font-semibold text-3xl text-white bg-slate-700">
           ---LINKS---
         <Link to="/login">LOGINN</Link>

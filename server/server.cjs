@@ -21,29 +21,29 @@ app.use(
 );
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(
-  express.static(
-    "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server"
-  )
-);
-// app.use(express.static('C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server'));
+// app.use(
+//   express.static(
+//     "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server"
+//   )
+// );
+app.use(express.static('C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server'));
 
-const db = mysql.createConnection({
-  host: process.env.Host,
-  user: process.env.User,
-  password: process.env.Password,
-  port: process.env.Port,
-  database: process.env.Database,
-});
+// const db = mysql.createConnection({
+//   host: process.env.Host,
+//   user: process.env.User,
+//   password: process.env.Password,
+//   port: process.env.Port,
+//   database: process.env.Database,
+// });
 
 // 
 
-// const db = mysql.createConnection({
-//   host: '127.0.0.1',
-//   user: 'root',
-//   password: 'lavu@sql1000',
-//   database: 'car'
-// });
+const db = mysql.createConnection({
+  host: '127.0.0.1',
+  user: 'root',
+  password: 'lavu@sql1000',
+  database: 'car'
+});
 
 db.connect((err) => {
   if (err) {
@@ -75,11 +75,11 @@ const verifyUser = (req, res, next) => {
 // ------------------------------------
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(
-      null,
-      "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
-    );
-    // cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
+    // cb(
+    //   null,
+    //   "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
+    // );
+    cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
   },
   filename: (req, file, cb) => {
     cb(
@@ -100,11 +100,11 @@ const upload = multer({
 
 const storage1 = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(
-      null,
-      "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
-    );
-    // cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
+    // cb(
+    //   null,
+    //   "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
+    // );
+    cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
   },
   filename: (req, file, cb) => {
     cb(
@@ -270,13 +270,7 @@ app.get("/reviews/:car_id", (req, res) => {
   });
 });
 
-// app.get("/carreviews", (req, res) => {
-//   const sql2 ="SELECT * FROM car C JOIN(SELECT O.car_id FROM orders O JOIN reviews R ON O.order_id=R.order_id) AS order_car ON C.car_id=order_car.car_id"
-//   db.query(sql2, (err, data) => {
-//     if (err) return console.log(err);
-//     return res.json(data);
-//   })
-// })
+
 
 //rent
 
@@ -354,7 +348,7 @@ app.post("/rent", verifyUser, async (req, res) => {
                   ); // Check every minute
                 }
               };
-              res.json("Order placed successfully");
+              res.json({ message: "Order placed successfully" });
               // Start checking conditions
               updateStockAndCheckConditions();
             }

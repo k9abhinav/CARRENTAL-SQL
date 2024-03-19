@@ -90,7 +90,6 @@ function Mybookings() {
 
   function formatDate(date) {
     let newdate = new Date(date);
-
     const day = String(newdate.getDate()).padStart(2, "0");
     const month = String(newdate.getMonth() + 1).padStart(2, "0");
     const year = newdate.getFullYear();
@@ -110,13 +109,28 @@ function Mybookings() {
 
     return formattedTime;
   }
-
+  // function incrementStock(car_id) {
+  //   return new Promise((resolve, reject) => {
+  //     console.log("in")
+  //     const sql = "UPDATE car SET stock=stock+1 WHERE car_id=?";
+  //     db.query(sql, [car_id], (err) => {
+  //       if (err) {
+  //         console.error("Error incrementing stock:", err);
+  //         reject(err);
+  //       } else {
+  //         console.log("Stock incremented2");
+  //         resolve();
+  //       }
+  //     });
+  //   });
+  // }
   const handleCancelOrder = (orderId) => {
     // Send a request to your backend to cancel the order
     axios
       .delete(`http://localhost:3000/cancel_orders/${orderId}`)
       .then((res) => {
         console.log("Server response:", res.data);
+
         console.log("Order cancelled successfully");
         window.location.reload();
       })
@@ -128,18 +142,19 @@ function Mybookings() {
   const cancellationPolicy = (startdate) => {
     const presentDate = new Date();
     const bookingStartDate = new Date(startdate);
-
+    console.log("date",bookingStartDate,"pre",presentDate)
     const timeDifference = bookingStartDate.getTime() - presentDate.getTime();
+    console.log(timeDifference)
 
     const hoursDifference = timeDifference / (1000 * 60 * 60);
-
-    return hoursDifference >= -6 && bookingStartDate > presentDate;
+    console.log(hoursDifference)
+    return hoursDifference >= 6 && bookingStartDate > presentDate;
   };
 
   const feedbackShow = (endDateandTime) => {
     const endDate = new Date(endDateandTime);
     const presentDate = new Date();
-    return endDate.getTime() > presentDate.getTime(); // Compare timestamps
+    return endDate.getTime() < presentDate.getTime(); // Compare timestamps
   };
 
   const handleFeedbackDisplay = () => {
