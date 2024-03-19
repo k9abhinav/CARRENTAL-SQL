@@ -32,7 +32,8 @@ function Register() {
                     <label className='block mb-1 text-gray-600'>Fullname:</label>
                     <input
                         type='text'
-                        className='w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500'
+                        name='fullname'
+                        className='w-full p-2 border rounded'
                         onChange={e => { setValues({ ...values, fullname: e.target.value }) }}
                         required
                     />
@@ -41,7 +42,8 @@ function Register() {
                     <label className='block mb-1 text-gray-600'>Email:</label>
                     <input
                         type='text'
-                        className='w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500'
+                        name='email'
+                        className='w-full p-2 border rounded'
                         onChange={e => { setValues({ ...values, email: e.target.value }) }}
                         required
                     />
@@ -50,7 +52,8 @@ function Register() {
                     <label className='block mb-1 text-gray-600'>Phone:</label>
                     <input
                         type='text'
-                        className='w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500'
+                        name='phone'
+                        className='w-full p-2 border rounded'
                         onChange={e => { setValues({ ...values, phno: e.target.value }) }}
                         required
                     />
@@ -59,7 +62,8 @@ function Register() {
                     <label className='block mb-1 text-gray-600'>Password:</label>
                     <input
                         type='password'
-                        className='w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500'
+                        name='password'
+                        className='w-full p-2 border rounded'
                         onChange={e => { setValues({ ...values, password: e.target.value }) }}
                         required
                     />
