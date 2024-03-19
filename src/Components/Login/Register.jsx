@@ -32,6 +32,7 @@ function Register() {
                     <label className='block mb-2'>Fullname:</label>
                     <input
                         type='text'
+                        name='fullname'
                         className='w-full p-2 border rounded'
                         onChange={e => { setValues({ ...values, fullname: e.target.value }) }}
                         required
@@ -41,6 +42,7 @@ function Register() {
                     <label className='block mb-2'>Email:</label>
                     <input
                         type='text'
+                        name='email'
                         className='w-full p-2 border rounded'
                         onChange={e => { setValues({ ...values, email: e.target.value }) }}
                         required
@@ -50,6 +52,7 @@ function Register() {
                     <label className='block mb-2'>Phone:</label>
                     <input
                         type='text'
+                        name='phone'
                         className='w-full p-2 border rounded'
                         onChange={e => { setValues({ ...values, phno: e.target.value }) }}
                         required
@@ -59,6 +62,7 @@ function Register() {
                     <label className='block mb-2'>Password:</label>
                     <input
                         type='password'
+                        name='password'
                         className='w-full p-2 border rounded'
                         onChange={e => { setValues({ ...values, password: e.target.value }) }}
                         required

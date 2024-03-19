@@ -432,7 +432,7 @@ app.get("/", verifyUser, (req, res) => {
       } else {
         const user_id = decoded.user_id; // Get user_id from decoded token
         const sql =
-          "SELECT u.email, a.image, a.phno,u.fullname FROM user u JOIN account a ON u.user_id = a.user_id WHERE u.user_id = ?";
+          "SELECT u.email, a.image, a.phno,u.fullname,a.gender,a.address FROM user u JOIN account a ON u.user_id = a.user_id WHERE u.user_id = ?";
         db.query(sql, [user_id], (err, data) => {
           if (err) {
             console.error("Database error:", err);
@@ -565,6 +565,7 @@ app.post("/update-account", verifyUser, (req, res) => {
     );
     return res.json({ Status: "Success" });
   });
+
 });
 
 app.get("/users_order", verifyUser, (req, res) => {
