@@ -18,6 +18,7 @@ const Navbar = () => {
     if (res.data.Status === "Success") {
       setauth(true);
       setname(res.data.userData.fullname);
+      
     } else {
       setauth(false);
     }
@@ -30,7 +31,13 @@ const Navbar = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
+
+  useEffect(()=> {
+    
+  axios.defaults.withCredentials = true;
+  })
   const handleLogout = () => {
+  axios.defaults.withCredentials = true;
     axios
       .get("http://localhost:3000/logout")
       // eslint-disable-next-line no-unused-vars
@@ -39,6 +46,7 @@ const Navbar = () => {
         setname("");
       })
       .catch((err) => console.log(err));
+      window.location.reload();
   };
 
   return (

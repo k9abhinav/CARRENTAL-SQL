@@ -43,6 +43,9 @@ const App = () => {
   .then((err) => console.log(err));
 
   },[auth]);
+  useEffect(()=> {
+    axios.defaults.withCredentials = true;
+    })
 
   // eslint-disable-next-line no-unused-vars
   const scroll = new LocomotiveScroll();

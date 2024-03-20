@@ -199,7 +199,7 @@ function Myaccount() {
               pattern="[0-9]{10}" // Add your desired pattern here
               title="Please enter valid phone number"
               maxLength={10}
-              value={phone}
+              // value={phone}
               onChange={(e) => {
                 const newValue = e.target.value;
               

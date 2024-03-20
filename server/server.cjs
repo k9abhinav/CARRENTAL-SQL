@@ -5,7 +5,7 @@ require("dotenv").config();
 const mysql = require("mysql2");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const app = express();
 const multer = require("multer");
 const path = require("path");
@@ -15,35 +15,35 @@ app.use(express.json());
 app.use(
   cors({
     origin: ["http://localhost:5173"],
-    methods: ["POST", "GET","DELETE","PUT"],
+    methods: ["POST", "GET", "DELETE", "PUT"],
     credentials: true,
   })
 );
 app.use(cookieParser());
 app.use(bodyParser.json());
-// app.use(
-//   express.static(
-//     "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server"
-//   )
-// );
-app.use(express.static('C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server'));
-
-// const db = mysql.createConnection({
-//   host: process.env.Host,
-//   user: process.env.User,
-//   password: process.env.Password,
-//   port: process.env.Port,
-//   database: process.env.Database,
-// });
-
-// 
+app.use(
+  express.static(
+    "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server"
+  )
+);
+// app.use(express.static('C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server'));
 
 const db = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'root',
-  password: 'lavu@sql1000',
-  database: 'car'
+  host: process.env.Host,
+  user: process.env.User,
+  password: process.env.Password,
+  port: process.env.Port,
+  database: process.env.Database,
 });
+
+//
+
+// const db = mysql.createConnection({
+//   host: '127.0.0.1',
+//   user: 'root',
+//   password: 'lavu@sql1000',
+//   database: 'car'
+// });
 
 db.connect((err) => {
   if (err) {
@@ -75,11 +75,11 @@ const verifyUser = (req, res, next) => {
 // ------------------------------------
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // cb(
-    //   null,
-    //   "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
-    // );
-    cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
+    cb(
+      null,
+      "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
+    );
+    // cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
   },
   filename: (req, file, cb) => {
     cb(
@@ -100,11 +100,11 @@ const upload = multer({
 
 const storage1 = multer.diskStorage({
   destination: (req, file, cb) => {
-    // cb(
-    //   null,
-    //   "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
-    // );
-    cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
+    cb(
+      null,
+      "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
+    );
+    // cb(null,"C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images")
   },
   filename: (req, file, cb) => {
     cb(
@@ -166,57 +166,89 @@ app.get("/view_offroad", (req, res) => {
   });
 });
 app.get("/getOrderID", (req, res) => {
-  const sql ="SELECT order_id , fare FROM orders ORDER BY order_id DESC LIMIT 1 "
+  const sql =
+    "SELECT order_id , fare FROM orders ORDER BY order_id DESC LIMIT 1 ";
   db.query(sql, (err, data) => {
     if (err) return console.log(err, data);
     return res.json(data);
   });
 });
 
+app.post("/review-car/:car_id",verifyUser,  (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.json({ Error: "Invalid token" });
+  } else {
+    jwt.verify(token, "hehe", async(err, decoded) => {
+      if (err) {
+        return res.json({ Error: err });
+      } else {
+        const user_id = decoded.user_id; 
+        const car_id = req.params.car_id;
+        console.log(car_id);
 
-app.post("/review-car/:car_id", async (req, res) => {
-  const car_id = req.params.car_id;
-  const user_id = req.user_id
-  console.log("CARID : "+car_id,"USER_ID :"+user_id);
-  const { value_for_money, pickup_dropoff_experience, cleanliness, drivability } = req.body;
+        console.log("CARID : " + car_id, "USER_ID :" + user_id);
+        const {
+          value_for_money,
+          pickup_dropoff_experience,
+          cleanliness,
+          drivability,
+        } = req.body;
+        
+        try {
+          await updateReview('value_for_money', value_for_money, car_id,user_id);
+          await updateReview('pickup_dropoff_experience', pickup_dropoff_experience, car_id,user_id);
+          await updateReview('cleanliness', cleanliness, car_id,user_id);
+          await updateReview('drivability', drivability, car_id,user_id);
 
-  try {
-    await updateReview('value_for_money', value_for_money, car_id,user_id);
-    await updateReview('pickup_dropoff_experience', pickup_dropoff_experience, car_id,user_id);
-    await updateReview('cleanliness', cleanliness, car_id,user_id);
-    await updateReview('drivability', drivability, car_id,user_id);
+          const overall_stars =
+            (value_for_money +
+              pickup_dropoff_experience +
+              cleanliness +
+              drivability) /
+            4;
+          await updateOverallStars(overall_stars, car_id,user_id);
 
-    const overall_stars = (value_for_money + pickup_dropoff_experience + cleanliness + drivability) / 4;
-    await updateOverallStars(overall_stars, car_id,user_id);
-
-    console.log("All updates successful");
-    res.status(200).send("Review submitted successfully");
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).send("Internal server error");
+          console.log("All updates successful");
+          res.status(200).send("Review submitted successfully");
+        } catch (error) {
+          console.error("Error:", error);
+          res.status(500).send("Internal server error");
+        }
+      }
+    });
   }
 });
 
-
-async function updateReview(field, value, car_id) {
-  const sql = `UPDATE reviews SET ${field} = ? WHERE car_id = ? and user_id =?`;
+async function updateReview(field, value, car_id,user_id) {
+  const sql = `INSERT INTO reviews (${field}) = ? WHERE car_id = ? and user_id =?`;
   return new Promise((resolve, reject) => {
-    db.query(sql, [value, car_id,user_id], (err) => {
+    db.query(sql, [value, car_id, user_id], (err) => {
       if (err) {
         console.error(`${field} update failed:`, err);
         reject(err);
       } else {
         console.log(`${field} successfully updated`);
+        let sql = `UPDATE reviews SET ${field} = ? WHERE car_id = ?`;
+        db.query(sql,[value, car_id, user_id], (err) => {
+          if (err) {
+            console.error(`${field} update failed:`, err);
+          }
+          else{
+            console.log(`${field} successfully updated`);
+          }
+        })
         resolve();
       }
     });
   });
 }
 
-async function updateOverallStars(overall_stars, car_id) {
-  const sql = 'UPDATE reviews SET overall_stars = ? WHERE car_id = ? and user_id =?';
+async function updateOverallStars(overall_stars, car_id,user_id) {
+  const sql =
+    "UPDATE reviews SET overall_stars = ? WHERE car_id = ? and user_id =?";
   return new Promise((resolve, reject) => {
-    db.query(sql, [overall_stars, car_id,user_id], (err) => {
+    db.query(sql, [overall_stars, car_id, user_id], (err) => {
       if (err) {
         console.error("Overall stars update failed:", err);
         reject(err);
@@ -227,7 +259,6 @@ async function updateOverallStars(overall_stars, car_id) {
     });
   });
 }
-
 
 //insert car
 
@@ -245,18 +276,18 @@ app.post("/addcar", upload1.single("car_image"), (req, res) => {
 });
 
 app.get("/reviews", (req, res) => {
-  const sql = 'SELECT * FROM reviews'
+  const sql = "SELECT * FROM reviews";
   db.query(sql, (err, data) => {
     if (err) return res.json(err);
-    return res.json(data)
-  })
-})
+    return res.json(data);
+  });
+});
 
 app.get("/reviews/:car_id", (req, res) => {
   const car_id = req.params.car_id;
   console.log("Received car_id:", car_id);
 
-  const sql='SELECT * FROM reviews WHERE car_id=?'
+  const sql = "SELECT * FROM reviews WHERE car_id=?";
   db.query(sql, [car_id], (err, reviews) => {
     if (err) {
       console.error("Error fetching reviews:", err);
@@ -264,12 +295,10 @@ app.get("/reviews/:car_id", (req, res) => {
     }
 
     console.log("Retrieved reviews:", reviews);
-    
+
     return res.json(reviews);
   });
 });
-
-
 
 //rent
 
@@ -286,14 +315,14 @@ app.post("/rent", verifyUser, async (req, res) => {
         let isStockDecremented = false; // Flag to track if stock is already decremented
         let isStockIncremented = false; // Flag to track if stock is already incremented
         const user_id = decoded.user_id;
-        console.log(user_id)
+        console.log(user_id);
         try {
           // Insert order into the database
           const sqlInsert =
             "INSERT INTO orders(user_id,car_id,s_date,e_date,d_type,fare) VALUES(?,?,?,?,?,?) ";
           db.query(
             sqlInsert,
-            [user_id,car_id, startDate, endDate, dType, fare],
+            [user_id, car_id, startDate, endDate, dType, fare],
             async (err, data) => {
               if (err) {
                 console.error("Error inserting order:", err);
@@ -392,11 +421,11 @@ async function incrementStock(car_id) {
 
 // ---------------------------------------------------------------------------------------
 
-app.post('/payments',verifyUser, (req, res) => {
-  const {order_id, status,price} = req.body
-  console.log("INSIDE PAYMENTS")
-  const sql="INSERT INTO payments (order_id , status,price) VALUES (?,?,?)"
-  db.query(sql, [order_id, status,price],(err,data)=>{
+app.post("/payments", verifyUser, (req, res) => {
+  const { order_id, status, price } = req.body;
+  console.log("INSIDE PAYMENTS");
+  const sql = "INSERT INTO payments (order_id , status,price) VALUES (?,?,?)";
+  db.query(sql, [order_id, status, price], (err, data) => {
     if (err) {
       console.log(err);
     } else {
@@ -404,22 +433,23 @@ app.post('/payments',verifyUser, (req, res) => {
       console.log(data);
       console.log("SUCESS--------------------------------");
     }
-  })
-})
+  });
+});
 
-
-
-app.delete("/cancel_orders/:orderId",verifyUser,(req, res) => {
+app.delete("/cancel_orders/:orderId", verifyUser, (req, res) => {
   const orderId = req.params.orderId;
   console.log(orderId);
-  const sql ="DELETE FROM orders WHERE order_id = ? and user_id = ?"
-  db.query(sql,[orderId], (err, data) => {
-    if(err) return console.error("Database error:", err);
-    else{
-      return console.log(data,"\n ---------------------SUCESS OF ORDER CANCEL");
+  const sql = "DELETE FROM orders WHERE order_id = ? and user_id = ?";
+  db.query(sql, [orderId], (err, data) => {
+    if (err) return console.error("Database error:", err);
+    else {
+      return console.log(
+        data,
+        "\n ---------------------SUCESS OF ORDER CANCEL"
+      );
     }
-  })
-})
+  });
+});
 
 app.get("/", verifyUser, (req, res) => {
   const token = req.cookies.token;
@@ -565,7 +595,6 @@ app.post("/update-account", verifyUser, (req, res) => {
     );
     return res.json({ Status: "Success" });
   });
-
 });
 
 app.get("/users_order", verifyUser, (req, res) => {

@@ -76,6 +76,7 @@ function Mybookings() {
     document.querySelector('.uploadimage input[type="file"]').click();
   };
   const [allordercar, setallordercar] = useState([]);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
   useEffect(() => {
     axios.defaults.withCredentials = true;
     axios
@@ -160,7 +161,8 @@ function Mybookings() {
     return endDate.getTime() < presentDate.getTime(); // Compare timestamps
   };
 
-  const handleFeedbackDisplay = () => {
+  const handleFeedbackDisplay = (orderId) => {
+    setSelectedOrderId(orderId); 
     setShowFeedbackForm(!showFeedbackForm);
   };
   const feedbackUpload = (car_id) => {
@@ -173,6 +175,7 @@ function Mybookings() {
       .catch((err) => {
         console.log(err);
       });
+      setShowFeedbackForm(false);
   };
   return (
     <div className="dashboard bg-zinc-200 w-full min-h-screen px-10 py-5 flex gap-5">
@@ -294,7 +297,7 @@ function Mybookings() {
               <div className="feedbackbtn py-5">
                 {feedbackShow(bookedcar.e_date) === true ? (
                   <button
-                    onClick={handleFeedbackDisplay}
+                    onClick={handleFeedbackDisplay(bookedcar.order_id)}
                     className="p-3 rounded-md bg-green-500 text-white"
                   >
                     Review your experience{" "}
@@ -306,8 +309,8 @@ function Mybookings() {
                 )}
               </div>
 
-              {feedbackShow(bookedcar.e_date) && showFeedbackForm && (
-                <div className="feedback-hide">
+              {feedbackShow(bookedcar.e_date) && selectedOrderId === bookedcar.order_id && showFeedbackForm && (
+                <div  className="feedback-hide">
                   <div className="feedback-form flex flex-col  bg-white text-black font-semibold p-3 rounded">
                     <h1 className="text-xl pb-4 text-center">FEEDBACK FORM</h1>
                     <div className="flex items-center">
