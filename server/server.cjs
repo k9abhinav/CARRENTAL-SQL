@@ -191,7 +191,7 @@ app.get("/getOrderID", (req, res) => {
   });
 });
 
-app.post("/review-car/:car_id",verifyUser, async (req, res) => {
+app.post("/review-car/:car_id", verifyUser, async (req, res) => {
   const token = req.cookies.token;
   if (!token) {
     return res.json({ Error: "Invalid token" });
@@ -211,6 +211,11 @@ app.post("/review-car/:car_id",verifyUser, async (req, res) => {
         } = req.body;
 
         try {
+          await updateReview(
+            "user_id",
+            car_id,
+            user_id
+          );
           await updateReview(
             "value_for_money",
             value_for_money,
@@ -246,6 +251,61 @@ app.post("/review-car/:car_id",verifyUser, async (req, res) => {
 });
 
 async function updateReview(field, value, car_id, user_id) {
+  const checkIfExistsSQL = "SELECT * FROM reviews WHERE car_id = ? AND user_id = ?";
+  // Check if user_id is null
+  if (user_id == null) {
+    db.query(checkIfExistsSQL, [car_id, null], (err, results) => {
+      if (err) {
+        console.error("Error checking if review exists:", err);
+        return;
+      }
+      
+      // If a review exists with null user_id, update it
+      if (results.length > 0) {
+        const updateSQL = `UPDATE reviews SET ${field} = ? WHERE car_id = ?`;
+        db.query(updateSQL, [value, car_id], (updateErr) => {
+          if (updateErr) {
+            console.error(`${field} update failed:`, updateErr);
+          } else {
+            console.log(`${field} successfully updated for null user_id`);
+          }
+        });
+      }
+    });
+  } else {
+    // If user_id is not null, insert or update the review based on the existing rows
+    db.query(checkIfExistsSQL, [car_id, user_id], (err, results) => {
+      if (err) {
+        console.error("Error checking if review exists:", err);
+        return;
+      }
+
+      // If the review exists, update it
+      if (results.length > 0) {
+        const updateSQL = `UPDATE reviews SET ${field} = ? WHERE car_id = ? AND user_id = ?`;
+        db.query(updateSQL, [value, car_id, user_id], (updateErr) => {
+          if (updateErr) {
+            console.error(`${field} update failed:`, updateErr);
+          } else {
+            console.log(`${field} successfully updated`);
+          }
+        });
+      } else {
+        // If the review doesn't exist, insert a new one
+        const insertSQL = `INSERT INTO reviews(car_id, user_id, ${field}) VALUES (?, ?, ?)`;
+        db.query(insertSQL, [car_id, user_id, value], (insertErr) => {
+          if (insertErr) {
+            console.error("Error inserting new review:", insertErr);
+          } else {
+            console.log("New review successfully inserted");
+          }
+        });
+      }
+    });
+  }
+}
+
+async function updateOverallStars(overall_stars, car_id, user_id) {
   const checkIfExistsSQL =
     "SELECT * FROM reviews WHERE car_id = ? AND user_id = ?";
   db.query(checkIfExistsSQL, [car_id, user_id], (err, results) => {
@@ -256,40 +316,8 @@ async function updateReview(field, value, car_id, user_id) {
 
     // If the review exists, update it
     if (results.length > 0) {
-      const updateSQL = `UPDATE reviews SET ${field} = ? WHERE car_id = ? AND user_id = ?`;
-      db.query(updateSQL, [value, car_id, user_id], (updateErr) => {
-        if (updateErr) {
-          console.error(`${field} update failed:`, updateErr);
-        } else {
-          console.log(`${field} successfully updated`);
-        }
-      });
-    } else {
-      // If the review doesn't exist, insert a new one
-      const insertSQL = `INSERT INTO reviews(car_id, user_id, ${field}) VALUES (?, ?, ?)`;
-      db.query(insertSQL, [car_id, user_id, value], (insertErr) => {
-        if (insertErr) {
-          console.error("Error inserting new review:", insertErr);
-        } else  {
-          console.log("New review successfully inserted");
-        }
-      });
-    }
-  });
-}
-
-
-async function updateOverallStars(overall_stars, car_id, user_id) {
-  const checkIfExistsSQL = "SELECT * FROM reviews WHERE car_id = ? AND user_id = ?";
-  db.query(checkIfExistsSQL, [car_id, user_id], (err, results) => {
-    if (err) {
-      console.error("Error checking if review exists:", err);
-      return;
-    }
-    
-    // If the review exists, update it
-    if (results.length > 0) {
-      const updateSQL = "UPDATE reviews SET overall_stars = ? WHERE car_id = ? AND user_id = ?";
+      const updateSQL =
+        "UPDATE reviews SET overall_stars = ? WHERE car_id = ? AND user_id = ?";
       db.query(updateSQL, [overall_stars, car_id, user_id], (updateErr) => {
         if (updateErr) {
           console.error("Error updating overall stars:", updateErr);
@@ -299,7 +327,8 @@ async function updateOverallStars(overall_stars, car_id, user_id) {
       });
     } else {
       // If the review doesn't exist, insert a new one
-      const insertSQL = "INSERT INTO reviews(car_id, user_id, overall_stars) VALUES (?, ?, ?)";
+      const insertSQL =
+        "INSERT INTO reviews(car_id, user_id, overall_stars) VALUES (?, ?, ?)";
       db.query(insertSQL, [car_id, user_id, overall_stars], (insertErr) => {
         if (insertErr) {
           console.error("Error inserting new review:", insertErr);
@@ -487,10 +516,10 @@ app.post("/payments", verifyUser, (req, res) => {
   });
 });
 
-app.delete("/cancel_orders/:orderId", verifyUser, (req, res) => {
+app.delete("/cancel_orders/:orderId", (req, res) => {
   const orderId = req.params.orderId;
   console.log(orderId);
-  const sql = "DELETE FROM orders WHERE order_id = ? and user_id = ?";
+  const sql = "DELETE FROM orders WHERE order_id = ?";
   db.query(sql, [orderId], (err, data) => {
     if (err) return console.error("Database error:", err);
     else {
