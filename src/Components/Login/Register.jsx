@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function Register() {
@@ -25,11 +25,11 @@ function Register() {
     }
 
     return (
-        <div className='max-w-md mx-auto p-4 border rounded-lg bg-gray-100'>
-            <h2 className='text-center'>Register</h2>
-            <form onSubmit={handleSubmit}>
+        <div className='max-w-md mx-auto p-6 border rounded-lg bg-gray-100'>
+            <h2 className='text-center text-2xl font-semibold text-blue-600 mb-6'>Register</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label className='block mb-2'>Fullname:</label>
+                    <label className='block mb-1 text-gray-600'>Fullname:</label>
                     <input
                         type='text'
                         name='fullname'
@@ -39,7 +39,7 @@ function Register() {
                     />
                 </div>
                 <div>
-                    <label className='block mb-2'>Email:</label>
+                    <label className='block mb-1 text-gray-600'>Email:</label>
                     <input
                         type='text'
                         name='email'
@@ -49,7 +49,7 @@ function Register() {
                     />
                 </div>
                 <div>
-                    <label className='block mb-2'>Phone:</label>
+                    <label className='block mb-1 text-gray-600'>Phone:</label>
                     <input
                         type='text'
                         name='phone'
@@ -59,7 +59,7 @@ function Register() {
                     />
                 </div>
                 <div>
-                    <label className='block mb-2'>Password:</label>
+                    <label className='block mb-1 text-gray-600'>Password:</label>
                     <input
                         type='password'
                         name='password'
@@ -68,12 +68,13 @@ function Register() {
                         required
                     />
                 </div>
-                <button type='submit' className='w-full p-2 mt-4 bg-blue-500 rounded text-white hover:bg-blue-700'>REGISTER</button>
+                <button type='submit' className='w-full p-3 bg-gradient-to-r from-sky-500 to-violet-500 rounded text-white hover:from-violet-500 hover:to-sky-500'>REGISTER</button>
+
             </form>
-            <p className='text-center mt-4'>ALREADY HAVE AN ACCOUNT</p>
+            <p className='text-center mt-4 text-gray-600'>Already have an account?</p>
             <Link to='/login' className='block text-center mt-2 text-blue-500 hover:underline'>LOGIN</Link>
         </div>
     )
 }
 
-export default Register
+export default Register;

@@ -20,6 +20,8 @@ function Form() {
   const [selectedDelivery, setSelectedDelivery] = useState("self");
   const [isAgreed, setIsAgreed] = useState(false);
   const [car, setCar] = useState();
+  const [message, setMessage] = useState('');
+  const [orderPlaced, setOrderPlaced] = useState(false);
   const [values, setValues] = useState({
     car_id: "",
     startDate: "",
