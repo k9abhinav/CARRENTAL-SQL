@@ -32,7 +32,7 @@ function CarDetail() {
       .catch((err) => console.log(err));
   }, [car_id]);
 
-  const overall = reviews.overall_stars
+  const overall = reviews.overall_stars?reviews.overall_stars:0
   const renderStars = (rating) => {
     const filledStars = [];
     const emptyStars = [];
