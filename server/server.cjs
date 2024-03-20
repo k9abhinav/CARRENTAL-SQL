@@ -33,11 +33,10 @@ app.use(
 );
 
 // const db = mysql.createConnection({
-//   host: process.env.Host,
-//   user: process.env.User,
-//   password: process.env.Password,
-//   port: process.env.Port,
-//   database: process.env.Database,
+//   host: '127.0.0.1',
+//   user: 'root',
+//   password: 'lavu@sql1000',
+//   database: 'car'
 // });
 
 //

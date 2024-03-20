@@ -85,6 +85,7 @@ function Mybookings() {
     document.querySelector('.uploadimage input[type="file"]').click();
   };
   const [allordercar, setallordercar] = useState([]);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
   useEffect(() => {
     axios.defaults.withCredentials = true;
     axios
@@ -185,6 +186,7 @@ function Mybookings() {
       .catch((err) => {
         console.log(err);
       });
+      setShowFeedbackForm(false);
   };
   return (
     <div className="dashboard bg-zinc-200 w-full min-h-screen px-10 py-5 flex gap-5">
