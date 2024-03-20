@@ -165,27 +165,29 @@ app.get("/view_offroad", (req, res) => {
     return res.json(data);
   });
 });
-app.get("/user", (req, res) => {
-  // const sql = 'SELECT * FROM user';
-  // connection.query(sql, (err, data) => {
-  //   if (err) return res.json(err)
-  //   return res.json(data)
-  // })
+app.get("/getOrderID", (req, res) => {
+  const sql ="SELECT order_id , fare FROM orders ORDER BY order_id DESC LIMIT 1 "
+  db.query(sql, (err, data) => {
+    if (err) return console.log(err, data);
+    return res.json(data);
+  });
 });
 
 
 app.post("/review-car/:car_id", async (req, res) => {
   const car_id = req.params.car_id;
+  const user_id = req.user_id
+  console.log("CARID : "+car_id,"USER_ID :"+user_id);
   const { value_for_money, pickup_dropoff_experience, cleanliness, drivability } = req.body;
 
   try {
-    await updateReview('value_for_money', value_for_money, car_id);
-    await updateReview('pickup_dropoff_experience', pickup_dropoff_experience, car_id);
-    await updateReview('cleanliness', cleanliness, car_id);
-    await updateReview('drivability', drivability, car_id);
+    await updateReview('value_for_money', value_for_money, car_id,user_id);
+    await updateReview('pickup_dropoff_experience', pickup_dropoff_experience, car_id,user_id);
+    await updateReview('cleanliness', cleanliness, car_id,user_id);
+    await updateReview('drivability', drivability, car_id,user_id);
 
     const overall_stars = (value_for_money + pickup_dropoff_experience + cleanliness + drivability) / 4;
-    await updateOverallStars(overall_stars, car_id);
+    await updateOverallStars(overall_stars, car_id,user_id);
 
     console.log("All updates successful");
     res.status(200).send("Review submitted successfully");
@@ -197,9 +199,9 @@ app.post("/review-car/:car_id", async (req, res) => {
 
 
 async function updateReview(field, value, car_id) {
-  const sql = `UPDATE reviews SET ${field} = ? WHERE car_id = ?`;
+  const sql = `UPDATE reviews SET ${field} = ? WHERE car_id = ? and user_id =?`;
   return new Promise((resolve, reject) => {
-    db.query(sql, [value, car_id], (err) => {
+    db.query(sql, [value, car_id,user_id], (err) => {
       if (err) {
         console.error(`${field} update failed:`, err);
         reject(err);
@@ -212,9 +214,9 @@ async function updateReview(field, value, car_id) {
 }
 
 async function updateOverallStars(overall_stars, car_id) {
-  const sql = 'UPDATE reviews SET overall_stars = ? WHERE car_id = ?';
+  const sql = 'UPDATE reviews SET overall_stars = ? WHERE car_id = ? and user_id =?';
   return new Promise((resolve, reject) => {
-    db.query(sql, [overall_stars, car_id], (err) => {
+    db.query(sql, [overall_stars, car_id,user_id], (err) => {
       if (err) {
         console.error("Overall stars update failed:", err);
         reject(err);
@@ -254,7 +256,6 @@ app.get("/reviews/:car_id", (req, res) => {
   const car_id = req.params.car_id;
   console.log("Received car_id:", car_id);
 
-  // const sql = "SELECT * FROM reviews R JOIN orders O ON R.order_id = O.order_id WHERE O.car_id = ?";
   const sql='SELECT * FROM reviews WHERE car_id=?'
   db.query(sql, [car_id], (err, reviews) => {
     if (err) {
@@ -264,19 +265,11 @@ app.get("/reviews/:car_id", (req, res) => {
 
     console.log("Retrieved reviews:", reviews);
     
-    // console.log("Retrieved reviews:", reviews);
-    // Send the reviews as a response
     return res.json(reviews);
   });
 });
 
-// app.get("/carreviews", (req, res) => {
-//   const sql2 ="SELECT * FROM car C JOIN(SELECT O.car_id FROM orders O JOIN reviews R ON O.order_id=R.order_id) AS order_car ON C.car_id=order_car.car_id"
-//   db.query(sql2, (err, data) => {
-//     if (err) return console.log(err);
-//     return res.json(data);
-//   })
-// })
+
 
 //rent
 
@@ -399,24 +392,31 @@ async function incrementStock(car_id) {
 
 // ---------------------------------------------------------------------------------------
 
-app.get("/see", (req, res) => {
-  db.query("SELECT * from account", (err, data) => {
+app.post('/payments',verifyUser, (req, res) => {
+  const {order_id, status,price} = req.body
+  console.log("INSIDE PAYMENTS")
+  const sql="INSERT INTO payments (order_id , status,price) VALUES (?,?,?)"
+  db.query(sql, [order_id, status,price],(err,data)=>{
     if (err) {
       console.log(err);
     } else {
       res.json(data);
+      console.log(data);
+      console.log("SUCESS--------------------------------");
     }
-  });
-});
+  })
+})
+
+
 
 app.delete("/cancel_orders/:orderId",verifyUser,(req, res) => {
   const orderId = req.params.orderId;
   console.log(orderId);
-  const sql ="DELETE FROM orders WHERE order_id = ?"
+  const sql ="DELETE FROM orders WHERE order_id = ? and user_id = ?"
   db.query(sql,[orderId], (err, data) => {
     if(err) return console.error("Database error:", err);
     else{
-      return console.log(data,"\n SUCESS OF ORDER CANCEL");
+      return console.log(data,"\n ---------------------SUCESS OF ORDER CANCEL");
     }
   })
 })

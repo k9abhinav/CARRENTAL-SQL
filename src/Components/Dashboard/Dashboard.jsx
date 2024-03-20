@@ -58,9 +58,10 @@ function Dashboard() {
       .catch((err) => {
         console.log(err);
       });
+      
   };
 
-  useEffect(() => {}, [image]);
+  
 
   useEffect(() => {
     axios.defaults.withCredentials = true;

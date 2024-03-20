@@ -8,7 +8,7 @@ import Offroad from "./Components/CarList/Offroad";
 import Convertible from "./Components/CarList/Convertible";
 import Sedancars from "./Components/CarList/Sedancars";
 import Hatchback from "./Components/CarList/Hatchback";
-import Dashboard from "./Components/Dashboard/Dashboard";
+// import Dashboard from "./Components/Dashboard/Dashboard";
 import Form from "./Components/Form/Form";
 import CarDetail from "./Components/CarDetail/CarDetail";
 import Home from "./Components/Home/Home";
@@ -24,12 +24,14 @@ import Register from "./Components/Login/Register";
 import Footer from "./Components/Footer/Footer";
 import React, {  useState,useEffect } from "react";
 import axios from "axios";
+import PaymentPage from "./Components/Payment/PaymentPage";
 
 const App = () => {
   const [auth, setauth] = useState(false);
-  axios.defaults.withCredentials = true;
 
   useEffect(() => {
+  axios.defaults.withCredentials = true;
+
     axios.get("http://localhost:3000")
    .then((res) => {
     if (res.data.Status === "Success") {
@@ -51,8 +53,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/carlist" element={<CarList />} />
-          <Route path="/dash" element={auth ? <Dashboard /> : <Login />} />
-          <Route path="/carlist/:car_id/proceed" element={<Form />} />
+          <Route path="/dash" element={auth ? <Mybookings /> : <Login />} />
+          <Route path="/carlist/:car_id/proceed" element={auth ? <Form />: <Login />} />
           <Route path="/carlist/:car_id" element={<CarDetail />} />
           <Route path="/myaccount" element={<Myaccount />} />
           <Route path="/mybooking" element={<Mybookings />}/>
@@ -69,6 +71,7 @@ const App = () => {
           <Route path="/hatchback" element={<Hatchback/>} />
           <Route path="/convertible" element={<Convertible/>} />
           <Route path="/sedan" element={<Sedancars/>} />
+          <Route path="/payments" element={<PaymentPage/>} />
         </Routes>
         
         <Footer />
