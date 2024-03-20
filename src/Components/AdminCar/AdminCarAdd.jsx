@@ -133,7 +133,7 @@ function AdminCarAdd() {
               
 
               <div>
-                <img src={"http://localhost:3000/images/"+data.car_image} alt="" />
+                <img src={`http://localhost:3000/images/`+data.car_image} alt="" />
 
               </div>
               </div>

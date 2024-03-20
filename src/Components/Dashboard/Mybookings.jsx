@@ -13,7 +13,7 @@ function Mybookings() {
   const [name, setname] = useState("");
   const [phone, setphone] = useState("");
   const [email, setemail] = useState("");
-  const [review,setReview]=useState(false)
+  // const [review,setReview]=useState(false)
   const [image, setimage] = useState();
   axios.defaults.withCredentials = true;
   const [file, setfile] = useState();
@@ -73,19 +73,18 @@ function Mybookings() {
       })
       .catch((err) => console.log(err));
   };
-  const handleBtnColor = () => {
-    if (!review) {
-      setReview(true);
-      const submit = document.querySelector(".btnColor");
-      submit.style.backgroundColor = "green";
-      submit.innerHTML = "Submitted";
-    }
-  }
+  // const handleBtnColor = () => {
+  //   if (!review) {
+  //     setReview(true);
+  //     const submit = document.querySelector(".btnColor");
+  //     submit.style.backgroundColor = "green";
+  //     submit.innerHTML = "Submitted";
+  //   }
+  // }
   const handleEditClick = () => {
     document.querySelector('.uploadimage input[type="file"]').click();
   };
   const [allordercar, setallordercar] = useState([]);
-  const [selectedOrderId, setSelectedOrderId] = useState(null);
   useEffect(() => {
     axios.defaults.withCredentials = true;
     axios
