@@ -13,7 +13,7 @@ function Mybookings() {
   const [name, setname] = useState("");
   const [phone, setphone] = useState("");
   const [email, setemail] = useState("");
-  // const [review,setReview]=useState(false)
+  const [review,setReview]=useState(false);
   const [image, setimage] = useState();
   axios.defaults.withCredentials = true;
   const [file, setfile] = useState();
@@ -169,24 +169,25 @@ function Mybookings() {
     return endDate.getTime() < presentDate.getTime(); // Compare timestamps
   };
 
-  const handleFeedbackDisplay = (orderId) => {
-    setSelectedOrderId(orderId);
-    console.log(selectedOrderId)
-    setShowFeedbackForm(!showFeedbackForm);
+      const handleFeedbackDisplay = (orderId) => {
+        setSelectedOrderId(orderId);
+
+        setShowFeedbackForm(!showFeedbackForm);
+      };
+  
+  const feedbackUpload = async (car_id) => {
+    try {
+      const response = await axios.post(`http://localhost:3000/review-car/${car_id}`, feedbackValues);
+      console.log(response);
+      console.log(feedbackValues);
+      console.log("Upload FEEDBACK done");
+      setShowFeedbackForm(false);
+      setReview(true);
+    } catch (error) {
+      console.error(error);
+    }
   };
   
-  const feedbackUpload = (car_id) => {
-    axios
-      .post(`http://localhost:3000/review-car/${car_id}`, feedbackValues)
-      .then((res) => {
-        console.log(res);
-        console.log("Upload FEEDBACK done");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-      setShowFeedbackForm(false);
-  };
   return (
     <div className="dashboard bg-zinc-200 w-full min-h-screen px-10 py-5 flex gap-5">
       <div className="left-dash min-w-[18vw] bg-zinc-50 py-10 rounded-md">
@@ -305,7 +306,8 @@ function Mybookings() {
                 </div>
               )}
               <div className="feedbackbtn py-5">
-                {feedbackShow(bookedcar.e_date) === true ? (
+                {review === true && showFeedbackForm === false ? <div className="p-5"><p>Thanks for your valuable review</p></div> :<div></div> }
+                {feedbackShow(bookedcar.e_date) === true  ? (
                   <button
                     onClick={()=>handleFeedbackDisplay(bookedcar.order_id)}
                     className="p-3 rounded-md bg-green-500 text-white"
@@ -334,11 +336,14 @@ function Mybookings() {
                               className="hidden"
                               name="rating"
                               value={ratingValue}
-                              onClick={() =>
+                              onClick={() =>{
+                                
                                 setfeedbackValues({
                                   ...feedbackValues,
                                   value_for_money: ratingValue,
                                 })
+                                console.log(feedbackValues);
+                              }
                               }
                             />
                             <FaStar
@@ -365,11 +370,13 @@ function Mybookings() {
                               className="hidden"
                               name="rating"
                               value={ratingValue}
-                              onClick={() =>
+                              onClick={() =>{
                                 setfeedbackValues({
                                   ...feedbackValues,
                                   pickup_dropoff_experience: ratingValue,
                                 })
+                                console.log(feedbackValues);
+                              }
                               }
                             />
                             <FaStar
@@ -397,11 +404,13 @@ function Mybookings() {
                               className="hidden"
                               name="rating"
                               value={ratingValue}
-                              onClick={() =>
+                              onClick={() =>{
                                 setfeedbackValues({
                                   ...feedbackValues,
                                   cleanliness: ratingValue,
                                 })
+                                console.log(feedbackValues);
+                              }
                               }
                             />
                             <FaStar
@@ -428,11 +437,13 @@ function Mybookings() {
                               className="hidden"
                               name="rating"
                               value={ratingValue}
-                              onClick={() =>
+                              onClick={() =>{
                                 setfeedbackValues({
                                   ...feedbackValues,
                                   drivability: ratingValue,
                                 })
+                                console.log(feedbackValues);
+                              }
                               }
                             />
                             <FaStar
@@ -449,8 +460,8 @@ function Mybookings() {
                       })}
                     </div>
                     <button
-                      type="submit"
-                      onSubmit={feedbackUpload(bookedcar.car_id)}
+                      
+                      onClick={()=> feedbackUpload(bookedcar.car_id)}
                       className="btnColor bg-yellow-300 text-black font-semibold w-fit px-3 py-2 rounded-lg self-center"
                     >
                       Submit
