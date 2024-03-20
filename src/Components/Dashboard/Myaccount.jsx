@@ -29,7 +29,7 @@ function Myaccount() {
       .post("http://localhost:3000/update-account", values)
       .then((res) => {
         if (res.data.Status === "Success") {
-          navigate("/dash");
+          navigate("/myaccount");
           console.log("Updated account gender phno and address");
           setupdated(true);
         } else {
@@ -199,7 +199,7 @@ function Myaccount() {
               pattern="[0-9]{10}" // Add your desired pattern here
               title="Please enter valid phone number"
               maxLength={10}
-              // value={phone}
+              
               onChange={(e) => {
                 const newValue = e.target.value;
               
@@ -221,7 +221,7 @@ function Myaccount() {
               <p>{name}</p>
             </div>
             <div className="flex items-center justify-center py-2">
-              {gender ? (
+              {/* {gender ? (
                 <div>Gender : {getGender}
                 </div>
                 
@@ -234,7 +234,7 @@ function Myaccount() {
                     name=""
                     id=""
                     className="p-1"
-                    value={getGender}
+                    // value={getGender}
                     onChange={(e) => {
                       const newValue = e.target.value;
                      
@@ -248,7 +248,27 @@ function Myaccount() {
                     <option value="Other">Other</option>
                   </select>
                 </div>
-              )}
+              )} */}
+            <label htmlFor="" className="mr-2">
+                    Edit Gender :{" "}
+                  </label>
+                  <select
+                    name=""
+                    id=""
+                    className="p-1"
+                    // value={getGender}
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                     
+                      setValues({ ...values, gender: newValue });
+            
+                    }}
+                  >
+                    <option value="">Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
             </div>
           </div>
         </div>

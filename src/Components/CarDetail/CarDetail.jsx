@@ -92,7 +92,7 @@ function CarDetail() {
               {Object.keys(reviews).map((reviewKey, index) => (
                 <div key={index}>
                   {/* Exclude review_id and car_id fields */}
-                  {!(reviewKey === "review_id" || reviewKey === "car_id" || reviewKey==="overall_stars") && (
+                  {!(reviewKey === "review_id" || reviewKey === "car_id" ||reviewKey === "user_id"|| reviewKey==="overall_stars") && (
                     <div className="flex items-center w-full justify-center gap-5">
                       <div className=" w-full  px-2">
                         <p className="text-[16px]">{reviewKey}</p>

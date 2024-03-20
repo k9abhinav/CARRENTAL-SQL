@@ -8,10 +8,12 @@ import { FaStar } from "react-icons/fa";
 import { RiImageEditFill } from "react-icons/ri";
 function Mybookings() {
   const [auth, setauth] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [message, setmessage] = useState("");
   const [name, setname] = useState("");
   const [phone, setphone] = useState("");
   const [email, setemail] = useState("");
+  const [review,setReview]=useState(false)
   const [image, setimage] = useState();
   axios.defaults.withCredentials = true;
   const [file, setfile] = useState();
@@ -71,7 +73,14 @@ function Mybookings() {
       })
       .catch((err) => console.log(err));
   };
-
+  const handleBtnColor = () => {
+    if (!review) {
+      setReview(true);
+      const submit = document.querySelector(".btnColor");
+      submit.style.backgroundColor = "green";
+      submit.innerHTML = "Submitted";
+    }
+  }
   const handleEditClick = () => {
     document.querySelector('.uploadimage input[type="file"]').click();
   };
@@ -162,7 +171,8 @@ function Mybookings() {
   };
 
   const handleFeedbackDisplay = (orderId) => {
-    setSelectedOrderId(orderId); 
+    setSelectedOrderId(orderId);
+    console.log(selectedOrderId)
     setShowFeedbackForm(!showFeedbackForm);
   };
   const feedbackUpload = (car_id) => {
@@ -297,7 +307,7 @@ function Mybookings() {
               <div className="feedbackbtn py-5">
                 {feedbackShow(bookedcar.e_date) === true ? (
                   <button
-                    onClick={handleFeedbackDisplay(bookedcar.order_id)}
+                    onClick={()=>handleFeedbackDisplay(bookedcar.order_id)}
                     className="p-3 rounded-md bg-green-500 text-white"
                   >
                     Review your experience{" "}
@@ -309,8 +319,8 @@ function Mybookings() {
                 )}
               </div>
 
-              {feedbackShow(bookedcar.e_date) && selectedOrderId === bookedcar.order_id && showFeedbackForm && (
-                <div  className="feedback-hide">
+              {feedbackShow(bookedcar.e_date) && selectedOrderId === bookedcar.order_id  && showFeedbackForm && (
+                <div className="feedback-hide">
                   <div className="feedback-form flex flex-col  bg-white text-black font-semibold p-3 rounded">
                     <h1 className="text-xl pb-4 text-center">FEEDBACK FORM</h1>
                     <div className="flex items-center">
@@ -441,7 +451,7 @@ function Mybookings() {
                     <button
                       type="submit"
                       onSubmit={feedbackUpload(bookedcar.car_id)}
-                      className="bg-yellow-300 text-black font-semibold w-fit px-3 py-2 rounded-lg self-center"
+                      className="btnColor bg-yellow-300 text-black font-semibold w-fit px-3 py-2 rounded-lg self-center"
                     >
                       Submit
                     </button>
