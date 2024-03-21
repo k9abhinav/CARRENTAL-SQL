@@ -175,14 +175,14 @@ function Mybookings() {
         setShowFeedbackForm(!showFeedbackForm);
       };
   
-  const feedbackUpload = async (car_id) => {
+  const feedbackUpload =  (car_id) => {
     try {
-      const response = await axios.post(`http://localhost:3000/review-car/${car_id}`, feedbackValues);
+      const response = axios.post(`http://localhost:3000/review-car/${car_id}`, feedbackValues);
       console.log(response);
       console.log(feedbackValues);
       console.log("Upload FEEDBACK done");
-      setShowFeedbackForm(false);
-      setReview(true);
+      // setShowFeedbackForm(false);
+      // setReview(true);
     } catch (error) {
       console.error(error);
     }

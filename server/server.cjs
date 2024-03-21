@@ -21,16 +21,16 @@ app.use(
 );
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(
-  express.static(
-    "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server"
-  )
-);
 // app.use(
 //   express.static(
-//     "C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server"
+//     "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server"
 //   )
 // );
+app.use(
+  express.static(
+    "C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server"
+  )
+);
 
 // const db = mysql.createConnection({
 //   host: '127.0.0.1',
@@ -39,22 +39,20 @@ app.use(
 //   database: 'car'
 // });
 
+// const db = mysql.createConnection({
+//   host: process.env.Host,
+//   user: process.env.User,
+//   password: process.env.Password,
+//   port: process.env.Port,
+//   database: process.env.Database,
+// });
 
 const db = mysql.createConnection({
-  host: process.env.Host,
-  user: process.env.User,
-  password: process.env.Password,
-  port: process.env.Port,
-  database: process.env.Database,
+  host: "127.0.0.1",
+  user: "root",
+  password: "lavu@sql1000",
+  database: "car",
 });
-//
-
-// const db = mysql.createConnection({
-//   host: "127.0.0.1",
-//   user: "root",
-//   password: "lavu@sql1000",
-//   database: "car",
-// });
 
 db.connect((err) => {
   if (err) {
@@ -86,14 +84,14 @@ const verifyUser = (req, res, next) => {
 // ------------------------------------
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(
-      null,
-      "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
-    );
     // cb(
     //   null,
-    //   "C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images"
+    //   "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
     // );
+    cb(
+      null,
+      "C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images"
+    );
   },
   filename: (req, file, cb) => {
     cb(
@@ -114,14 +112,14 @@ const upload = multer({
 
 const storage1 = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(
-      null,
-      "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
-    );
     // cb(
     //   null,
-    //   "C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images"
+    //   "C:\\Users\\k9abh\\OneDrive\\Documents\\practice-samples\\server\\images"
     // );
+    cb(
+      null,
+      "C:\\Users\\Dell Inspiron 15\\OneDrive\\Desktop\\CARRENTAL-SQL-main\\server\\images"
+    );
   },
   filename: (req, file, cb) => {
     cb(
@@ -191,12 +189,12 @@ app.get("/getOrderID", (req, res) => {
   });
 });
 
-app.post("/review-car/:car_id", verifyUser, async (req, res) => {
+app.post("/review-car/:car_id", verifyUser, (req, res) => {
   const token = req.cookies.token;
   if (!token) {
     return res.json({ Error: "Invalid token" });
   } else {
-    jwt.verify(token, "hehe", async (err, decoded) => {
+    jwt.verify(token, "hehe", (err, decoded) => {
       if (err) {
         return res.json({ Error: err });
       } else {
@@ -211,25 +209,16 @@ app.post("/review-car/:car_id", verifyUser, async (req, res) => {
         } = req.body;
 
         try {
-          await updateReview(
-            "user_id",
+          updateReview(
+            {
+              value_for_money,
+              pickup_dropoff_experience,
+              cleanliness,
+              drivability,
+            },
             car_id,
             user_id
           );
-          await updateReview(
-            "value_for_money",
-            value_for_money,
-            car_id,
-            user_id
-          );
-          await updateReview(
-            "pickup_dropoff_experience",
-            pickup_dropoff_experience,
-            car_id,
-            user_id
-          );
-          await updateReview("cleanliness", cleanliness, car_id, user_id);
-          await updateReview("drivability", drivability, car_id, user_id);
 
           const overall_stars =
             (value_for_money +
@@ -237,12 +226,12 @@ app.post("/review-car/:car_id", verifyUser, async (req, res) => {
               cleanliness +
               drivability) /
             4;
-          await updateOverallStars(overall_stars, car_id, user_id);
+          updateOverallStars(overall_stars, car_id, user_id);
 
           console.log("All updates successful");
           res.status(200).send("Review submitted successfully");
         } catch (error) {
-          console.error("Error:", error);
+          console.error("Error: INTHISLINE", error);
           res.status(500).send("Internal server error");
         }
       }
@@ -250,62 +239,56 @@ app.post("/review-car/:car_id", verifyUser, async (req, res) => {
   }
 });
 
-async function updateReview(field, value, car_id, user_id) {
-  const checkIfExistsSQL = "SELECT * FROM reviews WHERE car_id = ? AND user_id = ?";
-  // Check if user_id is null
-  if (user_id == null) {
-    db.query(checkIfExistsSQL, [car_id, null], (err, results) => {
-      if (err) {
-        console.error("Error checking if review exists:", err);
-        return;
-      }
-      
-      // If a review exists with null user_id, update it
-      if (results.length > 0) {
-        const updateSQL = `UPDATE reviews SET ${field} = ? WHERE car_id = ?`;
-        db.query(updateSQL, [value, car_id], (updateErr) => {
-          if (updateErr) {
-            console.error(`${field} update failed:`, updateErr);
-          } else {
-            console.log(`${field} successfully updated for null user_id`);
-          }
-        });
-      }
-    });
-  } else {
-    // If user_id is not null, insert or update the review based on the existing rows
-    db.query(checkIfExistsSQL, [car_id, user_id], (err, results) => {
-      if (err) {
-        console.error("Error checking if review exists:", err);
-        return;
-      }
+function updateReview(values, car_id, user_id) {
+  const checkIfExistsSQL =
+    "SELECT * FROM reviews WHERE car_id = ? AND user_id = ?";
+  db.query(checkIfExistsSQL, [car_id, user_id], (err, results) => {
+    if (err) {
+      console.error("Error checking if review exists:", err);
+      return;
+    }
 
-      // If the review exists, update it
-      if (results.length > 0) {
-        const updateSQL = `UPDATE reviews SET ${field} = ? WHERE car_id = ? AND user_id = ?`;
-        db.query(updateSQL, [value, car_id, user_id], (updateErr) => {
-          if (updateErr) {
-            console.error(`${field} update failed:`, updateErr);
-          } else {
-            console.log(`${field} successfully updated`);
-          }
-        });
-      } else {
-        // If the review doesn't exist, insert a new one
-        const insertSQL = `INSERT INTO reviews(car_id, user_id, ${field}) VALUES (?, ?, ?)`;
-        db.query(insertSQL, [car_id, user_id, value], (insertErr) => {
-          if (insertErr) {
-            console.error("Error inserting new review:", insertErr);
-          } else {
-            console.log("New review successfully inserted");
-          }
-        });
+    if (results.length > 0) {
+      // If the review exists, construct an update query
+      let updateSQL = "UPDATE reviews SET ";
+      let updateValues = [];
+      for (const key in values) {
+        updateSQL += `${key} = ?, `;
+        updateValues.push(values[key]);
       }
-    });
-  }
+      // Remove the trailing comma and space
+      updateSQL = updateSQL.slice(0, -2);
+      updateSQL += " WHERE car_id = ? AND user_id = ?";
+      updateValues.push(car_id, user_id);
+
+      db.query(updateSQL, updateValues, (updateErr) => {
+        if (updateErr) {
+          console.error("Error updating review:", updateErr);
+        } else {
+          console.log("Review successfully updated");
+        }
+      });
+    } else {
+      // If the review doesn't exist, insert a new one
+      let insertSQL = "INSERT INTO reviews(car_id, user_id, ";
+      let fields = Object.keys(values).join(", ");
+      let placeholders = Object.keys(values).fill("?").join(", ");
+      let insertValues = Object.values(values);
+      insertSQL += `${fields}) VALUES (?, ?, ${placeholders})`;
+      insertValues.push(car_id, user_id);
+
+      db.query(insertSQL, insertValues, (insertErr) => {
+        if (insertErr) {
+          console.error("Error inserting new review:", insertErr);
+        } else {
+          console.log("New review successfully inserted");
+        }
+      });
+    }
+  });
 }
 
-async function updateOverallStars(overall_stars, car_id, user_id) {
+function updateOverallStars(overall_stars, car_id, user_id) {
   const checkIfExistsSQL =
     "SELECT * FROM reviews WHERE car_id = ? AND user_id = ?";
   db.query(checkIfExistsSQL, [car_id, user_id], (err, results) => {
