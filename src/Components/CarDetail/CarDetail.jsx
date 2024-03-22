@@ -25,7 +25,13 @@ function CarDetail() {
             const allReviews = reviewsObject.map((review) =>
               review.car_id == car_id ? review : ""
             );
-            setReviews(allReviews[0]);
+            if (allReviews.length <= 1) {
+              setReviews(allReviews[0]);
+              
+            }
+            else {
+              setReviews(allReviews[1])
+            }
           })
           .catch((err) => console.log(err));
       })

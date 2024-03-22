@@ -37,7 +37,7 @@ const Team = () => {
         name: 'Anu Jain',
         position: 'Customer Support Specialist',
         bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        image: 'https://img.freepik.com/premium-photo/young-smart-indian-businesswoman-smiling-face-standing-blur-background-creative-colorful-office-interior-design-generative-ai-aig20_31965-142318.jpg?size=626&ext=jpg&ga=GA1.1.1395880969.1709251200&semt=ais',
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYCazbJFSf4guI0BwHvbqzQm7FEz-xtfP6Bw&usqp=CAU',
       },
   ];
 
