@@ -25,15 +25,17 @@ function SUVcars() {
     
   },[])
   const calculateAverageRating = (carId) => {
+    let overallStars;
     const carReviews = reviews.filter((review) => review.car_id === carId);
     if (carReviews.length === 0) return 0;
-
-    const totalRating = carReviews.reduce(
-      (acc, curr) => acc + curr.overall_stars,
-      0
-    );
-    return totalRating / carReviews.length;
-  };
+    console.log(carReviews)
+    const carReviewOfOne = carReviews[1];
+    console.log(carReviewOfOne);
+    if (carReviewOfOne) {
+      overallStars = carReviewOfOne.overall_stars;
+    };
+    return overallStars;
+  }
 
   const renderStars = (rating) => {
     const filledStars = [];
