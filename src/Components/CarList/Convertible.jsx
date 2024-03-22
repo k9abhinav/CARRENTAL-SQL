@@ -77,7 +77,7 @@ function Convertible() {
         <div className="p-2 bg-white rounded-md">Round trip</div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {carData.map((car) => (
+        {carData.map((car,i) => (
           <div key={carData[i].car_id} className="border border-gray-200 rounded-lg bg-white shadow-md">
             <img
               className="w-full h-56 object-cover rounded-t-md"

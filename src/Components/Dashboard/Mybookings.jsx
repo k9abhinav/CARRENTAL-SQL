@@ -160,7 +160,9 @@ function Mybookings() {
 
     const hoursDifference = timeDifference / (1000 * 60 * 60);
     console.log(hoursDifference)
-    return hoursDifference >= 6 && bookingStartDate > presentDate;
+    // if(hoursDifference >= 6 && bookingStartDate > presentDate) return true;
+    // else return false;
+    return true;
   };
 
   const feedbackShow = (endDateandTime) => {
