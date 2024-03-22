@@ -181,8 +181,8 @@ function Mybookings() {
       console.log(response);
       console.log(feedbackValues);
       console.log("Upload FEEDBACK done");
-      // setShowFeedbackForm(false);
-      // setReview(true);
+      setShowFeedbackForm(false);
+      setReview(true);
     } catch (error) {
       console.error(error);
     }
