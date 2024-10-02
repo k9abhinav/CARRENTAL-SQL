@@ -1,0 +1,25 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@layer utilities {
+  .blend-mode-normal {
+    mix-blend-mode: normal;
+  }
+
+  .blend-mode-multiply {
+    mix-blend-mode: multiply;
+  }
+  .blend-mode-difference {
+    mix-blend-mode: difference;
+  }
+  /* Add more blend modes as needed */
+}
+*{
+  margin: 0px;
+  padding: 0px;
+  /* font-family: Poppins; */
+  
+}
+.payments{
+  display: hidden;
+}
